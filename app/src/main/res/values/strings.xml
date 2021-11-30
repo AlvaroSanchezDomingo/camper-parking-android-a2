@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">DonationX</string>
+    <string name="donateTitle">Welcome Homer</string>
+    <string name="donateSubtitle">Please Give Generously</string>
+    <string name="donateButton">Donate</string>
+    <string name="paypal">PayPal</string>
+    <string name="direct">Direct</string>
+    <string name="amount">Amount</string>
+    <string name="total">Total so Far</string>
+    <string name="totalSoFar">$ %1$d</string>
+    <string name="reportTitle">Donations Report</string>
+    <string name="defaultAmount">00</string>
+    <string name="defaultMethod">N/A</string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="action_donate">Donate</string>
+    <string name="action_report">Report</string>
+
+    <string name="action_share">Share</string>
+    <string name="action_send">Send</string>
+    <string name="group_communicate">Communicate</string>
+
+    <string name="nav_header_title">DonationX (Lab)</string>
+    <string name="nav_header_subtitle">voteforhomer@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="action_about">About Us</string>
+    <string name="aboutus_title">Homer for President !!</string>
+    <string name="aboutus_message">Hi, I\'m Homer\n\nPlease vote for me.\n\n Please Please Please Please!!</string>
+
+    <string name="donationsNotFound">No Donations Yet…\nGo Make a Donation!</string>
+    <string name="donationError">Error : Couldn\'t Make a Donation…</string>
+    <string name="donationDetails">Donation Details</string>
+
+    <string name="amt">Amount :</string>
+    <string name="payment">Payment :</string>
+    <string name="message">Message :</string>
+    <string name="upvotes">UpVotes :</string>
+
+    <string name="messageLoading">Please Wait while the Donations are Loading...</string>
+
+    <!-- START Firebase Resources-->
+
+    <string name="label_emailpassword">Email/Password Authentication</string>
+    <string name="desc_emailpassword">Use an email and password to authenticate with Firebase.</string>
+    <string name="sign_in">Sign In</string>
+    <string name="create_account">Create Account</string>
+    <string name="send_link">Send Link</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="verify_email">Verify Email</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="loading">Loading…</string>
+    <string name="signed_in">Signed In</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="token_null">Token: null</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="desc_firebase_lockup">Firebase logo and name</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="firebase_status_fmt">Firebase User: %s</string>
+    <string name="firebase_user_management">Firebase User Management</string>
+    <string name="emailpassword_status_fmt">Email User: %1$s (verified: %2$b)</string>
+    <string name="emailpassword_title_text">Please Login Below</string>
+
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+</resources>
