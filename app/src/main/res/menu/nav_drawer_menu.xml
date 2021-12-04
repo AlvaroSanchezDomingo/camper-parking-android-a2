@@ -4,30 +4,14 @@
     tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/donateFragment"
+            android:id="@+id/parkingFragment"
             android:icon="@drawable/ic_menu_donate"
             android:title="@string/action_donate" />
         <item
-            android:id="@+id/reportFragment"
+            android:id="@+id/listFragment"
             android:icon="@drawable/ic_menu_report"
             android:title="@string/action_report" />
-        <item
-            android:id="@+id/aboutFragment"
-            android:icon="@drawable/ic_menu_aboutus"
-            android:title="@string/action_about" />
     </group>
-    <item android:title="@string/group_communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/action_share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/action_send" />
-        </menu>
-    </item>
     <item android:title="Access Control">
         <menu>
             <item
