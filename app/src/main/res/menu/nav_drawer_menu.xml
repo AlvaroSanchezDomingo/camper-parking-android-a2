@@ -4,13 +4,13 @@
     tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/parkingFragment"
+            android:id="@+id/editFragment"
             android:icon="@drawable/ic_menu_donate"
-            android:title="@string/action_donate" />
+            android:title="@string/action_edit" />
         <item
             android:id="@+id/listFragment"
             android:icon="@drawable/ic_menu_report"
-            android:title="@string/action_report" />
+            android:title="@string/action_list" />
     </group>
     <item android:title="Access Control">
         <menu>

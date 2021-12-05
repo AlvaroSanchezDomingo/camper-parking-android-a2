@@ -1,17 +1,18 @@
 package ie.wit.parking.models
 
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.FirebaseUser
 
 interface ParkingStore {
     fun findAll(donationsList:
                 MutableLiveData<List<ParkingModel>>)
-    fun findAll(email:String,
+    fun findAll(userid:String,
                 donationsList:
                 MutableLiveData<List<ParkingModel>>)
-    fun findById(email:String, id: String,
+    fun findById(userid:String, id: String,
                  donation: MutableLiveData<ParkingModel>)
-    fun create(donation: ParkingModel)
-    fun delete(email:String,id: String)
-    fun update(email:String,id: String,donation: ParkingModel)
+    fun create(firebaseUser: MutableLiveData<FirebaseUser>, donation: ParkingModel)
+    fun delete(userid:String,id: String)
+    fun update(userid:String,id: String,donation: ParkingModel)
 }
 

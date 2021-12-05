@@ -6,24 +6,29 @@
     app:startDestination="@id/listFragment">
 
     <fragment
-        android:id="@+id/parkingFragment"
+        android:id="@+id/editFragment"
         android:name="ie.wit.parking.ui.edit.EditFragment"
-        android:label="@string/action_donate"
-        tools:layout="@layout/fragment_parking" >
+        android:label="@string/action_edit"
+        tools:layout="@layout/fragment_edit">
         <action
-            android:id="@+id/action_donateFragment_to_reportFragment"
+            android:id="@+id/action_editFragment_to_listFragment"
             app:destination="@id/listFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
+        <argument
+            android:name="parkingid"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
     </fragment>
     <fragment
         android:id="@+id/listFragment"
         android:name="ie.wit.parking.ui.list.ListFragment"
-        android:label="@string/action_report"
-        tools:layout="@layout/fragment_list" >
+        android:label="@string/action_list"
+        tools:layout="@layout/fragment_list">
         <action
-            android:id="@+id/action_reportFragment_to_donateFragment"
-            app:destination="@id/parkingFragment"
+            android:id="@+id/action_listFragment_to_editFragment"
+            app:destination="@id/editFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>

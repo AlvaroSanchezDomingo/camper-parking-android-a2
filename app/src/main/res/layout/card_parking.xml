@@ -32,40 +32,26 @@
                 app:srcCompat="@mipmap/ic_launcher_round" />
 
             <TextView
-                android:id="@+id/paymentamount"
-                android:layout_width="87dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
+                android:id="@+id/title"
+                android:layout_width="186dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="18dp"
+                android:layout_marginEnd="111dp"
                 android:layout_toEndOf="@+id/imageIcon"
-                android:text="@{Integer.toString(parking.amount)}"
-                android:textSize="24sp"
-                tools:text="€1000" />
+                android:text="@{parking.title}" />
 
             <TextView
-                android:id="@+id/paymentmethod"
-                android:layout_width="88dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="17dp"
-                android:layout_marginTop="15dp"
-                android:layout_toEndOf="@+id/paymentamount"
-                android:text="@{parking.paymentmethod}"
-                android:textSize="24sp"
-                tools:text="@string/paypal" />
-
-            <ImageView
-                android:id="@+id/imagefavourite"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_alignParentTop="true"
+                android:id="@+id/description"
+                android:layout_width="195dp"
+                android:layout_height="29dp"
+                android:layout_below="@+id/title"
                 android:layout_alignParentEnd="true"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="5dp"
-                android:layout_toEndOf="@id/paymentmethod"
-                app:srcCompat="@android:drawable/star_big_off" />
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="13dp"
+                android:layout_marginEnd="104dp"
+                android:layout_toEndOf="@+id/imageIcon"
+                android:text="@{parking.description}" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

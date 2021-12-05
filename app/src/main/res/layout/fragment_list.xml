@@ -38,7 +38,7 @@
         android:id="@+id/donationsNotFound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/donationsNotFound"
+        android:text="@string/parkingsNotFound"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/color_primary"

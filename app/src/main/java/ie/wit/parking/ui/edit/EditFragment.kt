@@ -8,21 +8,27 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
 import ie.wit.parking.R
-import ie.wit.parking.databinding.FragmentParkingBinding
+import ie.wit.parking.databinding.FragmentEditBinding
 import ie.wit.parking.models.ParkingModel
 import ie.wit.parking.ui.auth.LoggedInViewModel
-import ie.wit.parking.ui.list.ListViewModel
+import timber.log.Timber
+
 
 class EditFragment : Fragment() {
 
-    var totalDonated = 0
-    private var _fragBinding: FragmentParkingBinding? = null
+    private var _fragBinding: FragmentEditBinding? = null
     // This property is only valid between onCreateView and onDestroyView.
+    private val args by navArgs<EditFragmentArgs>()
     private val fragBinding get() = _fragBinding!!
-    private lateinit var donateViewModel: EditViewModel
-    private val reportViewModel: ListViewModel by activityViewModels()
+    private lateinit var editViewModel: EditViewModel
+
+
+
+
     private val loggedInViewModel : LoggedInViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,22 +38,15 @@ class EditFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        _fragBinding = FragmentParkingBinding.inflate(inflater, container, false)
+        _fragBinding = FragmentEditBinding.inflate(inflater, container, false)
         val root = fragBinding.root
 
-        donateViewModel = ViewModelProvider(this).get(EditViewModel::class.java)
-        donateViewModel.observableStatus.observe(viewLifecycleOwner, Observer {
+        editViewModel = ViewModelProvider(this).get(EditViewModel::class.java)
+        editViewModel.observableParking.observe(viewLifecycleOwner, Observer { render()  })
+        editViewModel.observableStatus.observe(viewLifecycleOwner, Observer {
                 status -> status?.let { render(status) }
         })
 
-        fragBinding.progressBar.max = 10000
-        fragBinding.amountPicker.minValue = 1
-        fragBinding.amountPicker.maxValue = 1000
-
-        fragBinding.amountPicker.setOnValueChangedListener { _, _, newVal ->
-            //Display the newly selected number to paymentAmount
-            fragBinding.paymentAmount.setText("$newVal")
-        }
         setButtonListener(fragBinding)
         return root;
     }
@@ -56,33 +55,37 @@ class EditFragment : Fragment() {
         when (status) {
             true -> {
                 view?.let {
-                    //Uncomment this if you want to immediately return to Report
-                    //findNavController().popBackStack()
+                    findNavController().popBackStack()
                 }
             }
-            false -> Toast.makeText(context,getString(R.string.donationError),Toast.LENGTH_LONG).show()
+            false -> Toast.makeText(context,getString(R.string.parkingError),Toast.LENGTH_LONG).show()
         }
     }
+    private fun render() {
+        fragBinding.parkingvm = editViewModel
+        Timber.i("Retrofit fragBinding.donationvm == $fragBinding.donationvm")
+    }
 
-    fun setButtonListener(layout: FragmentParkingBinding) {
-        layout.donateButton.setOnClickListener {
-            val amount = if (layout.paymentAmount.text.isNotEmpty())
-                layout.paymentAmount.text.toString().toInt() else layout.amountPicker.value
-            if(totalDonated >= layout.progressBar.max)
-                Toast.makeText(context,"Donate Amount Exceeded!", Toast.LENGTH_LONG).show()
-            else {
-                val paymentmethod = if(layout.paymentMethod.checkedRadioButtonId == R.id.Direct) "Direct" else "Paypal"
-                totalDonated += amount
-                layout.totalSoFar.text = "$$totalDonated"
-                layout.progressBar.progress = totalDonated
-                donateViewModel.addDonation(ParkingModel(paymentmethod = paymentmethod,amount = amount,
-                    email = loggedInViewModel.liveFirebaseUser.value?.email!!))
+    fun setButtonListener(layout: FragmentEditBinding) {
+        layout.saveButton.setOnClickListener {
+            val category = when (layout.Category.checkedRadioButtonId) {
+                R.id.Nature -> "Nature"
+                R.id.Public -> "Public"
+                R.id.Private -> "Private"
+                R.id.Camping -> "Camping"
+                else -> "N/A"
+            }
+            val title = layout.title.text.toString()
+            val description = layout.description.text.toString()
+                editViewModel.addParking(loggedInViewModel.liveFirebaseUser,
+                    ParkingModel(title = title, description = description, category = category,
+                        email = loggedInViewModel.liveFirebaseUser.value?.email!!))
             }
         }
-    }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_parking, menu)
+        inflater.inflate(R.menu.menu_edit, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -98,8 +101,7 @@ class EditFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        totalDonated = reportViewModel.observableDonationsList.value!!.sumOf { it.amount }
-        fragBinding.progressBar.progress = totalDonated
-        fragBinding.totalSoFar.text = String.format(getString(R.string.totalSoFar),totalDonated)
+        editViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!,
+            args.parkingid)
     }
 }

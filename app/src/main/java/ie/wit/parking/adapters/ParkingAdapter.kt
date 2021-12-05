@@ -7,13 +7,13 @@ import ie.wit.parking.R
 import ie.wit.parking.databinding.CardParkingBinding
 import ie.wit.parking.models.ParkingModel
 
-interface DonationClickListener {
-    fun onDonationClick(donation: ParkingModel)
+interface ParkingClickListener {
+    fun onParkingClick(parking: ParkingModel)
 }
 
-class DonationAdapter constructor(private var donations: ArrayList<ParkingModel>,
-                                  private val listener: DonationClickListener)
-    : RecyclerView.Adapter<DonationAdapter.MainHolder>() {
+class ParkingAdapter constructor(private var parkings: ArrayList<ParkingModel>,
+                                 private val listener: ParkingClickListener)
+    : RecyclerView.Adapter<ParkingAdapter.MainHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         val binding = CardParkingBinding
@@ -23,25 +23,25 @@ class DonationAdapter constructor(private var donations: ArrayList<ParkingModel>
     }
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
-        val donation = donations[holder.adapterPosition]
-        holder.bind(donation,listener)
+        val parking = parkings[holder.adapterPosition]
+        holder.bind(parking,listener)
     }
 
     fun removeAt(position: Int) {
-        donations.removeAt(position)
+        parkings.removeAt(position)
         notifyItemRemoved(position)
     }
 
-    override fun getItemCount(): Int = donations.size
+    override fun getItemCount(): Int = parkings.size
 
     inner class MainHolder(val binding : CardParkingBinding) :
                             RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(parking: ParkingModel, listener: DonationClickListener) {
+        fun bind(parking: ParkingModel, listener: ParkingClickListener) {
             binding.root.tag = parking
             binding.parking = parking
             binding.imageIcon.setImageResource(R.mipmap.ic_launcher_round)
-            binding.root.setOnClickListener { listener.onDonationClick(parking) }
+            binding.root.setOnClickListener { listener.onParkingClick(parking) }
             binding.executePendingBindings()
         }
     }

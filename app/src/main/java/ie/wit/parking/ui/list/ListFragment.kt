@@ -13,19 +13,19 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ie.wit.parking.R
-import ie.wit.parking.adapters.DonationAdapter
-import ie.wit.parking.adapters.DonationClickListener
+import ie.wit.parking.adapters.ParkingAdapter
+import ie.wit.parking.adapters.ParkingClickListener
 import ie.wit.parking.databinding.FragmentListBinding
 import ie.wit.parking.models.ParkingModel
 import ie.wit.parking.ui.auth.LoggedInViewModel
 import ie.wit.parking.utils.*
 
-class ListFragment : Fragment(), DonationClickListener {
+class ListFragment : Fragment(), ParkingClickListener {
 
     private var _fragBinding: FragmentListBinding? = null
     private val fragBinding get() = _fragBinding!!
     lateinit var loader : AlertDialog
-    private val reportViewModel: ListViewModel by activityViewModels()
+    private val listViewModel: ListViewModel by activityViewModels()
     private val loggedInViewModel : LoggedInViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,14 +42,14 @@ class ListFragment : Fragment(), DonationClickListener {
 
         fragBinding.recyclerView.layoutManager = LinearLayoutManager(activity)
         fragBinding.fab.setOnClickListener {
-            val action = ListFragmentDirections.actionReportFragmentToDonateFragment()
+            val action = ListFragmentDirections.actionListFragmentToEditFragment()
             findNavController().navigate(action)
         }
-        showLoader(loader,"Downloading Donations")
-        reportViewModel.observableDonationsList.observe(viewLifecycleOwner, Observer {
-                donations ->
-            donations?.let {
-                render(donations as ArrayList<ParkingModel>)
+        showLoader(loader,"Downloading Parkings")
+        listViewModel.observableParkingList.observe(viewLifecycleOwner, Observer {
+                parkings ->
+            parkings?.let {
+                render(parkings as ArrayList<ParkingModel>)
                 hideLoader(loader)
                 checkSwipeRefresh()
             }
@@ -59,11 +59,11 @@ class ListFragment : Fragment(), DonationClickListener {
 
         val swipeDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                showLoader(loader,"Deleting Donation")
-                val adapter = fragBinding.recyclerView.adapter as DonationAdapter
+                showLoader(loader,"Deleting Parking")
+                val adapter = fragBinding.recyclerView.adapter as ParkingAdapter
                 adapter.removeAt(viewHolder.adapterPosition)
-                reportViewModel.delete(reportViewModel.liveFirebaseUser.value?.email!!,
-                    (viewHolder.itemView.tag as ParkingModel)._id)
+                listViewModel.delete(listViewModel.liveFirebaseUser.value?.uid!!,
+                    (viewHolder.itemView.tag as ParkingModel).uid!!)
                 hideLoader(loader)
             }
         }
@@ -74,7 +74,7 @@ class ListFragment : Fragment(), DonationClickListener {
 
         val swipeEditHandler = object : SwipeToEditCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                onDonationClick(viewHolder.itemView.tag as ParkingModel)
+                onParkingClick(viewHolder.itemView.tag as ParkingModel)
             }
         }
         val itemTouchEditHelper = ItemTouchHelper(swipeEditHandler)
@@ -95,7 +95,7 @@ class ListFragment : Fragment(), DonationClickListener {
     }
 
     private fun render(donationsList: ArrayList<ParkingModel>) {
-        fragBinding.recyclerView.adapter = DonationAdapter(donationsList,this)
+        fragBinding.recyclerView.adapter = ParkingAdapter(donationsList,this)
         if (donationsList.isEmpty()) {
             fragBinding.recyclerView.visibility = View.GONE
             fragBinding.donationsNotFound.visibility = View.VISIBLE
@@ -109,7 +109,7 @@ class ListFragment : Fragment(), DonationClickListener {
         fragBinding.swiperefresh.setOnRefreshListener {
             fragBinding.swiperefresh.isRefreshing = true
             showLoader(loader,"Downloading Donations")
-            reportViewModel.load()
+            listViewModel.load()
         }
     }
 
@@ -123,8 +123,8 @@ class ListFragment : Fragment(), DonationClickListener {
         showLoader(loader,"Downloading Donations")
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner, Observer { firebaseUser ->
             if (firebaseUser != null) {
-                reportViewModel.liveFirebaseUser.value = firebaseUser
-                reportViewModel.load()
+                listViewModel.liveFirebaseUser.value = firebaseUser
+                listViewModel.load()
             }
         })
         //hideLoader(loader)
@@ -135,7 +135,8 @@ class ListFragment : Fragment(), DonationClickListener {
         _fragBinding = null
     }
 
-    override fun onDonationClick(donation: ParkingModel) {
-        TODO("Not yet implemented")
+    override fun onParkingClick(parking: ParkingModel) {
+        val action = ListFragmentDirections.actionListFragmentToEditFragment(parking.uid!!)
+        findNavController().navigate(action)
     }
 }
