@@ -3,48 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/reportFragment">
+    app:startDestination="@id/listFragment">
 
     <fragment
-        android:id="@+id/donateFragment"
-        android:name="ie.wit.donationx.ui.donate.DonateFragment"
-        android:label="@string/action_donate"
-        tools:layout="@layout/fragment_donate" >
+        android:id="@+id/editFragment"
+        android:name="ie.wit.parking.ui.edit.EditFragment"
+        android:label="@string/action_edit"
+        tools:layout="@layout/fragment_edit">
         <action
-            android:id="@+id/action_donateFragment_to_reportFragment"
-            app:destination="@id/reportFragment"
+            android:id="@+id/action_editFragment_to_listFragment"
+            app:destination="@id/listFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
-    </fragment>
-    <fragment
-        android:id="@+id/reportFragment"
-        android:name="ie.wit.donationx.ui.report.ReportFragment"
-        android:label="@string/action_report"
-        tools:layout="@layout/fragment_report" >
-        <action
-            android:id="@+id/action_reportFragment_to_donateFragment"
-            app:destination="@id/donateFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
-        <action
-            android:id="@+id/action_reportFragment_to_donationDetailFragment"
-            app:destination="@id/donationDetailFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/aboutFragment"
-        android:name="ie.wit.donationx.ui.about.AboutFragment"
-        android:label="@string/action_about"
-        tools:layout="@layout/fragment_about" />
-    <fragment
-        android:id="@+id/donationDetailFragment"
-        android:name="ie.wit.donationx.ui.detail.DonationDetailFragment"
-        android:label="Donation Detail"
-        tools:layout="@layout/fragment_donation_detail" >
-        <action
-            android:id="@+id/action_donationDetailFragment_to_reportFragment"
-            app:destination="@id/reportFragment" />
         <argument
-            android:name="donationid"
-            app:argType="string" />
+            android:name="parkingid"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+    </fragment>
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="ie.wit.parking.ui.list.ListFragment"
+        android:label="@string/action_list"
+        tools:layout="@layout/fragment_list">
+        <action
+            android:id="@+id/action_listFragment_to_editFragment"
+            app:destination="@id/editFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>
 </navigation>

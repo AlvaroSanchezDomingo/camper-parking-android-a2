@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="parking"
+            type="ie.wit.parking.models.ParkingModel" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:elevation="24dp">
+
+        <RelativeLayout
+            android:id="@+id/cardDonation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/imageIcon"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@mipmap/ic_launcher_round" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="186dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="18dp"
+                android:layout_marginEnd="111dp"
+                android:layout_toEndOf="@+id/imageIcon"
+                android:text="@{parking.title}" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="195dp"
+                android:layout_height="29dp"
+                android:layout_below="@+id/title"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="13dp"
+                android:layout_marginEnd="104dp"
+                android:layout_toEndOf="@+id/imageIcon"
+                android:text="@{parking.description}" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</layout>
