@@ -11,79 +11,79 @@ object FirebaseDBManager : ParkingStore {
 
     var database: DatabaseReference = FirebaseDatabase.getInstance().reference
 
-    override fun findAll(donationsList: MutableLiveData<List<ParkingModel>>) {
+    override fun findAll(parkingsList: MutableLiveData<List<ParkingModel>>) {
         TODO("Not yet implemented")
     }
 
-    override fun findAll(userid: String, donationsList: MutableLiveData<List<ParkingModel>>) {
+    override fun findAll(userid: String, parkingsList: MutableLiveData<List<ParkingModel>>) {
 
-        database.child("user-donations").child(userid)
+        database.child("user-parkings").child(userid)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
-                    Timber.i("Firebase Donation error : ${error.message}")
+                    Timber.i("Firebase Parking error : ${error.message}")
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val localList = ArrayList<ParkingModel>()
                     val children = snapshot.children
                     children.forEach {
-                        val donation = it.getValue(ParkingModel::class.java)
-                        localList.add(donation!!)
+                        val parking = it.getValue(ParkingModel::class.java)
+                        localList.add(parking!!)
                     }
-                    database.child("user-donations").child(userid)
+                    database.child("user-parkings").child(userid)
                         .removeEventListener(this)
 
-                    donationsList.value = localList
+                    parkingsList.value = localList
                 }
             })
     }
 
-    override fun findById(userid: String, donationid: String, donation: MutableLiveData<ParkingModel>) {
+    override fun findById(userid: String, parkingid: String, parking: MutableLiveData<ParkingModel>) {
 
-        database.child("user-donations").child(userid)
-            .child(donationid).get().addOnSuccessListener {
-                donation.value = it.getValue(ParkingModel::class.java)
+        database.child("user-parkings").child(userid)
+            .child(parkingid).get().addOnSuccessListener {
+                parking.value = it.getValue(ParkingModel::class.java)
                 Timber.i("firebase Got value ${it.value}")
             }.addOnFailureListener{
                 Timber.e("firebase Error getting data $it")
             }
     }
 
-    override fun create(firebaseUser: MutableLiveData<FirebaseUser>, donation: ParkingModel) {
+    override fun create(firebaseUser: MutableLiveData<FirebaseUser>, parking: ParkingModel) {
         Timber.i("Firebase DB Reference : $database")
 
         val uid = firebaseUser.value!!.uid
-        val key = database.child("donations").push().key
+        val key = database.child("parkings").push().key
         if (key == null) {
             Timber.i("Firebase Error : Key Empty")
             return
         }
-        donation.uid = key
-        val donationValues = donation.toMap()
+        parking.uid = key
+        val parkingValues = parking.toMap()
 
         val childAdd = HashMap<String, Any>()
-        childAdd["/donations/$key"] = donationValues
-        childAdd["/user-donations/$uid/$key"] = donationValues
+        childAdd["/parkings/$key"] = parkingValues
+        childAdd["/user-parkings/$uid/$key"] = parkingValues
 
         database.updateChildren(childAdd)
     }
 
-    override fun delete(userid: String, donationid: String) {
+    override fun delete(userid: String, parkingid: String) {
 
         val childDelete : MutableMap<String, Any?> = HashMap()
-        childDelete["/donations/$donationid"] = null
-        childDelete["/user-donations/$userid/$donationid"] = null
+        childDelete["/parkings/$parkingid"] = null
+        childDelete["/user-parkings/$userid/$parkingid"] = null
 
         database.updateChildren(childDelete)
     }
 
-    override fun update(userid: String, donationid: String, donation: ParkingModel) {
+    override fun update(userid: String, parkingnid: String, parking: ParkingModel) {
 
-        val donationValues = donation.toMap()
+        val parkingValues = parking.toMap()
 
         val childUpdate : MutableMap<String, Any?> = HashMap()
-        childUpdate["donations/$donationid"] = donationValues
-        childUpdate["user-donations/$userid/$donationid"] = donationValues
+        childUpdate["parkings/$parkingnid"] = parkingValues
+        childUpdate["user-parkings/$userid/$parkingnid"] = parkingValues
 
         database.updateChildren(childUpdate)
     }

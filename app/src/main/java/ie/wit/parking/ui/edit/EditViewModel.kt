@@ -3,8 +3,13 @@ package ie.wit.parking.ui.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseUser
 import ie.wit.parking.firebase.FirebaseDBManager
+import ie.wit.parking.models.Location
 import ie.wit.parking.models.ParkingModel
 import timber.log.Timber
 
@@ -12,6 +17,8 @@ class EditViewModel : ViewModel() {
 
     private val status = MutableLiveData<Boolean>()
     private val parking = MutableLiveData<ParkingModel>()
+    var location = Location()
+    var map: GoogleMap? = null
 
     var observableParking: LiveData<ParkingModel>
         get() = parking
@@ -39,4 +46,6 @@ class EditViewModel : ViewModel() {
             Timber.i("Detail getDonation() Error : $e.message")
         }
     }
+
+
 }

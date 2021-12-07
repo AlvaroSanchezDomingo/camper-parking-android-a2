@@ -11,6 +11,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import ie.wit.parking.R
 import ie.wit.parking.databinding.FragmentEditBinding
 import ie.wit.parking.models.ParkingModel
@@ -26,14 +32,14 @@ class EditFragment : Fragment() {
     private val fragBinding get() = _fragBinding!!
     private lateinit var editViewModel: EditViewModel
 
-
-
+    var edit: Boolean = false
 
     private val loggedInViewModel : LoggedInViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -42,13 +48,27 @@ class EditFragment : Fragment() {
         val root = fragBinding.root
 
         editViewModel = ViewModelProvider(this).get(EditViewModel::class.java)
-        editViewModel.observableParking.observe(viewLifecycleOwner, Observer { render()  })
+        editViewModel.observableParking.observe(viewLifecycleOwner, Observer { render() })
         editViewModel.observableStatus.observe(viewLifecycleOwner, Observer {
                 status -> status?.let { render(status) }
         })
+        fragBinding.mapView.onCreate(savedInstanceState);
+        fragBinding.mapView.getMapAsync(callback)
 
         setButtonListener(fragBinding)
         return root;
+    }
+
+    private val callback = OnMapReadyCallback { googleMap ->
+        val lat = 37.3
+        val lng = -5.98
+        val zoom = 15f
+        googleMap.clear()
+        googleMap.uiSettings.setZoomControlsEnabled(true)
+        val marker = LatLng(lat, lng)
+        val options = MarkerOptions().title(marker.toString()).position(marker)
+        googleMap.addMarker(options)
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, zoom))
     }
 
     private fun render(status: Boolean) {
@@ -63,7 +83,7 @@ class EditFragment : Fragment() {
     }
     private fun render() {
         fragBinding.parkingvm = editViewModel
-        Timber.i("Retrofit fragBinding.donationvm == $fragBinding.donationvm")
+        Timber.i("Retrofit fragBinding.parkingvm == $fragBinding.parkingvm")
     }
 
     fun setButtonListener(layout: FragmentEditBinding) {
@@ -101,7 +121,10 @@ class EditFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        Timber.i("###Fragment args.parkingid == ${args.parkingid}")
+        Timber.i("###Fragment args.location == ${args.location}")
         editViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!,
             args.parkingid)
     }
+
 }
