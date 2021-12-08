@@ -58,6 +58,7 @@ object FirebaseDBManager : ParkingStore {
             Timber.i("Firebase Error : Key Empty")
             return
         }
+        Timber.i("Firebase DB create key : $key")
         parking.uid = key
         val parkingValues = parking.toMap()
 

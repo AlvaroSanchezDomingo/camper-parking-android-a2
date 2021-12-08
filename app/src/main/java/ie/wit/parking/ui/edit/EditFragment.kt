@@ -11,12 +11,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import ie.wit.parking.R
 import ie.wit.parking.databinding.FragmentEditBinding
 import ie.wit.parking.models.ParkingModel
@@ -31,6 +25,7 @@ class EditFragment : Fragment() {
     private val args by navArgs<EditFragmentArgs>()
     private val fragBinding get() = _fragBinding!!
     private lateinit var editViewModel: EditViewModel
+
 
     var edit: Boolean = false
 
@@ -48,27 +43,23 @@ class EditFragment : Fragment() {
         val root = fragBinding.root
 
         editViewModel = ViewModelProvider(this).get(EditViewModel::class.java)
-        editViewModel.observableParking.observe(viewLifecycleOwner, Observer { render() })
-        editViewModel.observableStatus.observe(viewLifecycleOwner, Observer {
+        editViewModel.observableParking.observe(viewLifecycleOwner, {
+            parking ->  renderParking()
+        })
+        editViewModel.observableStatus.observe(viewLifecycleOwner, {
                 status -> status?.let { render(status) }
         })
+
         fragBinding.mapView.onCreate(savedInstanceState);
-        fragBinding.mapView.getMapAsync(callback)
+        fragBinding.mapView.getMapAsync{googleMap ->
+            editViewModel.doConfigureMap(googleMap)
+            googleMap.setOnMapClickListener {
+                Timber.i("Click on map")
+            }
+        }
 
         setButtonListener(fragBinding)
         return root;
-    }
-
-    private val callback = OnMapReadyCallback { googleMap ->
-        val lat = 37.3
-        val lng = -5.98
-        val zoom = 15f
-        googleMap.clear()
-        googleMap.uiSettings.setZoomControlsEnabled(true)
-        val marker = LatLng(lat, lng)
-        val options = MarkerOptions().title(marker.toString()).position(marker)
-        googleMap.addMarker(options)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, zoom))
     }
 
     private fun render(status: Boolean) {
@@ -81,9 +72,10 @@ class EditFragment : Fragment() {
             false -> Toast.makeText(context,getString(R.string.parkingError),Toast.LENGTH_LONG).show()
         }
     }
-    private fun render() {
+    private fun renderParking() {
+        Timber.i("Render parking")
+        editViewModel.locationUpdate()
         fragBinding.parkingvm = editViewModel
-        Timber.i("Retrofit fragBinding.parkingvm == $fragBinding.parkingvm")
     }
 
     fun setButtonListener(layout: FragmentEditBinding) {
@@ -97,11 +89,22 @@ class EditFragment : Fragment() {
             }
             val title = layout.title.text.toString()
             val description = layout.description.text.toString()
+            val lat = layout.lat.text.toString().toDouble()
+            val lng = layout.lng.text.toString().toDouble()
+            if(edit){
+                editViewModel.editParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid!!,fragBinding.parkingvm?.observableParking!!.value!!)
+            }else{
                 editViewModel.addParking(loggedInViewModel.liveFirebaseUser,
                     ParkingModel(title = title, description = description, category = category,
-                        email = loggedInViewModel.liveFirebaseUser.value?.email!!))
+                        email = loggedInViewModel.liveFirebaseUser.value?.email!!, lat = lat, lng = lng))
             }
+
         }
+        layout.locationButton.setOnClickListener {
+            editViewModel.locationUpdate()
+        }
+
+    }
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -121,10 +124,8 @@ class EditFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Timber.i("###Fragment args.parkingid == ${args.parkingid}")
-        Timber.i("###Fragment args.location == ${args.location}")
-        editViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!,
-            args.parkingid)
+        edit = args.parkingid != null
+        editViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid)
     }
 
 }

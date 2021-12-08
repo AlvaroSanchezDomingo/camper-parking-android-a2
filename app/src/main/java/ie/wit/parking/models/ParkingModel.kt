@@ -27,7 +27,9 @@ data class ParkingModel(
                   "title" to title,
                   "description" to description,
                   "category" to category,
-                  "email" to email
+                  "email" to email,
+                  "lat" to lat,
+                  "lng" to lng
             )
       }
 }
