@@ -27,13 +27,14 @@ class EditFragment : Fragment() {
     private lateinit var editViewModel: EditViewModel
 
 
-
+    var edit: Boolean = false
 
     private val loggedInViewModel : LoggedInViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -42,10 +43,20 @@ class EditFragment : Fragment() {
         val root = fragBinding.root
 
         editViewModel = ViewModelProvider(this).get(EditViewModel::class.java)
-        editViewModel.observableParking.observe(viewLifecycleOwner, Observer { render()  })
-        editViewModel.observableStatus.observe(viewLifecycleOwner, Observer {
+        editViewModel.observableParking.observe(viewLifecycleOwner, {
+            parking ->  renderParking()
+        })
+        editViewModel.observableStatus.observe(viewLifecycleOwner, {
                 status -> status?.let { render(status) }
         })
+
+        fragBinding.mapView.onCreate(savedInstanceState);
+        fragBinding.mapView.getMapAsync{googleMap ->
+            editViewModel.doConfigureMap(googleMap)
+            googleMap.setOnMapClickListener {
+                Timber.i("Click on map")
+            }
+        }
 
         setButtonListener(fragBinding)
         return root;
@@ -61,9 +72,10 @@ class EditFragment : Fragment() {
             false -> Toast.makeText(context,getString(R.string.parkingError),Toast.LENGTH_LONG).show()
         }
     }
-    private fun render() {
+    private fun renderParking() {
+        Timber.i("Render parking")
+        editViewModel.locationUpdate()
         fragBinding.parkingvm = editViewModel
-        Timber.i("Retrofit fragBinding.donationvm == $fragBinding.donationvm")
     }
 
     fun setButtonListener(layout: FragmentEditBinding) {
@@ -77,11 +89,22 @@ class EditFragment : Fragment() {
             }
             val title = layout.title.text.toString()
             val description = layout.description.text.toString()
+            val lat = layout.lat.text.toString().toDouble()
+            val lng = layout.lng.text.toString().toDouble()
+            if(edit){
+                editViewModel.editParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid!!,fragBinding.parkingvm?.observableParking!!.value!!)
+            }else{
                 editViewModel.addParking(loggedInViewModel.liveFirebaseUser,
                     ParkingModel(title = title, description = description, category = category,
-                        email = loggedInViewModel.liveFirebaseUser.value?.email!!))
+                        email = loggedInViewModel.liveFirebaseUser.value?.email!!, lat = lat, lng = lng))
             }
+
         }
+        layout.locationButton.setOnClickListener {
+            editViewModel.locationUpdate()
+        }
+
+    }
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -101,7 +124,8 @@ class EditFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        editViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!,
-            args.parkingid)
+        edit = args.parkingid != null
+        editViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid)
     }
+
 }

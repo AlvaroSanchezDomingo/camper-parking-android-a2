@@ -19,6 +19,7 @@ import ie.wit.parking.databinding.FragmentListBinding
 import ie.wit.parking.models.ParkingModel
 import ie.wit.parking.ui.auth.LoggedInViewModel
 import ie.wit.parking.utils.*
+import timber.log.Timber
 
 class ListFragment : Fragment(), ParkingClickListener {
 
@@ -42,7 +43,7 @@ class ListFragment : Fragment(), ParkingClickListener {
 
         fragBinding.recyclerView.layoutManager = LinearLayoutManager(activity)
         fragBinding.fab.setOnClickListener {
-            val action = ListFragmentDirections.actionListFragmentToEditFragment()
+            val action = ListFragmentDirections.actionListFragmentToEditFragment(null)
             findNavController().navigate(action)
         }
         showLoader(loader,"Downloading Parkings")
@@ -136,6 +137,7 @@ class ListFragment : Fragment(), ParkingClickListener {
     }
 
     override fun onParkingClick(parking: ParkingModel) {
+        Timber.i("parking.uid == ${parking.uid}")
         val action = ListFragmentDirections.actionListFragmentToEditFragment(parking.uid!!)
         findNavController().navigate(action)
     }
