@@ -20,6 +20,9 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="null" />
+        <action
+            android:id="@+id/action_editFragment_to_locationEditFragment"
+            app:destination="@id/locationEditFragment" />
     </fragment>
     <fragment
         android:id="@+id/listFragment"
@@ -31,5 +34,35 @@
             app:destination="@id/editFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
+        <action
+            android:id="@+id/action_listFragment_to_viewFragment"
+            app:destination="@id/viewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/locationEditFragment"
+        android:name="ie.wit.parking.LocationEditFragment"
+        android:label="fragment_location_edit"
+        tools:layout="@layout/fragment_location_edit" >
+        <action
+            android:id="@+id/action_locationEditFragment_to_editFragment"
+            app:destination="@id/editFragment" />
+        <argument
+            android:name="location"
+            app:argType="ie.wit.parking.models.Location"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewFragment"
+        android:name="ie.wit.parking.ui.view.ViewFragment"
+        android:label="ViewFragment">
+        <argument
+            android:name="parkingid"
+            android:defaultValue="null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_viewFragment_to_listFragment"
+            app:destination="@id/listFragment" />
     </fragment>
 </navigation>

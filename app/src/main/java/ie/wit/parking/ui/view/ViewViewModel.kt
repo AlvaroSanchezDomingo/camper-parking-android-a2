@@ -1,4 +1,4 @@
-package ie.wit.parking.ui.edit
+package ie.wit.parking.ui.view
 
 import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
@@ -14,9 +14,7 @@ import ie.wit.parking.models.Location
 import ie.wit.parking.models.ParkingModel
 import timber.log.Timber
 
-class EditViewModel : ViewModel() {
-
-
+class ViewViewModel : ViewModel() {
 
     private var map: GoogleMap? = null
 
@@ -25,30 +23,7 @@ class EditViewModel : ViewModel() {
         get() = _parking
         set(value) {_parking.value = value.value}
 
-    private val _status = MutableLiveData<Boolean>()
-    val observableStatus: LiveData<Boolean>
-        get() = _status
 
-    fun radioButtonCategory(category: Int){
-        _parking.value!!.category = category
-    }
-
-    fun addParking(firebaseUser: MutableLiveData<FirebaseUser>, parking: ParkingModel) {
-        _status.value = try {
-            FirebaseDBManager.create(firebaseUser,parking)
-            true
-        } catch (e: IllegalArgumentException) {
-            false
-        }
-    }
-    fun editParking(userid: String, parkingid: String, parking: ParkingModel) {
-        _status.value = try {
-            FirebaseDBManager.update(userid,parkingid, parking)
-            true
-        } catch (e: IllegalArgumentException) {
-            false
-        }
-    }
     fun getParking(userid:String, id: String?) {
         try {
 

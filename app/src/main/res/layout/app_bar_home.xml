@@ -10,14 +10,14 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.DonationX.AppBarOverlay">
+        android:theme="@style/Theme.Camper.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Theme.DonationX.PopupOverlay" />
+            app:popupTheme="@style/Theme.Camper.PopupOverlay" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_home" />

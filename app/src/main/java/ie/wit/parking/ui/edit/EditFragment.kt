@@ -27,13 +27,14 @@ class EditFragment : Fragment() {
     private lateinit var editViewModel: EditViewModel
 
 
-
+    var edit: Boolean = false
 
     private val loggedInViewModel : LoggedInViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -42,14 +43,46 @@ class EditFragment : Fragment() {
         val root = fragBinding.root
 
         editViewModel = ViewModelProvider(this).get(EditViewModel::class.java)
-        editViewModel.observableParking.observe(viewLifecycleOwner, Observer { render()  })
-        editViewModel.observableStatus.observe(viewLifecycleOwner, Observer {
+        editViewModel.observableParking.observe(viewLifecycleOwner, {
+            renderParking()
+        })
+        editViewModel.observableStatus.observe(viewLifecycleOwner, {
                 status -> status?.let { render(status) }
         })
 
-        setButtonListener(fragBinding)
+        fragBinding.mapView.onCreate(savedInstanceState);
+        fragBinding.mapView.getMapAsync{googleMap ->
+            editViewModel.doConfigureMap(googleMap)
+            googleMap.setOnMapClickListener {
+                Timber.i("Click on map")
+            }
+        }
+
+        fragBinding.saveButton.setOnClickListener {
+            val category = when (fragBinding.Category.checkedRadioButtonId) {
+                R.id.Nature -> 1
+                R.id.Public -> 2
+                R.id.Private -> 3
+                R.id.Camping -> 4
+                else -> 1
+            }
+            val title = fragBinding.title.text.toString()
+            val description = fragBinding.description.text.toString()
+            val lat = fragBinding.lat.text.toString().toDouble()
+            val lng = fragBinding.lng.text.toString().toDouble()
+            if(edit){
+                editViewModel.editParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid!!,fragBinding.parkingvm?.observableParking!!.value!!)
+            }else{
+                editViewModel.addParking(loggedInViewModel.liveFirebaseUser,
+                    ParkingModel(title = title, description = description, category = category,
+                        email = loggedInViewModel.liveFirebaseUser.value?.email!!, lat = lat, lng = lng))
+            }
+
+        }
+
         return root;
     }
+
 
     private fun render(status: Boolean) {
         when (status) {
@@ -61,27 +94,10 @@ class EditFragment : Fragment() {
             false -> Toast.makeText(context,getString(R.string.parkingError),Toast.LENGTH_LONG).show()
         }
     }
-    private fun render() {
+    private fun renderParking() {
+        editViewModel.locationUpdate()
         fragBinding.parkingvm = editViewModel
-        Timber.i("Retrofit fragBinding.donationvm == $fragBinding.donationvm")
     }
-
-    fun setButtonListener(layout: FragmentEditBinding) {
-        layout.saveButton.setOnClickListener {
-            val category = when (layout.Category.checkedRadioButtonId) {
-                R.id.Nature -> "Nature"
-                R.id.Public -> "Public"
-                R.id.Private -> "Private"
-                R.id.Camping -> "Camping"
-                else -> "N/A"
-            }
-            val title = layout.title.text.toString()
-            val description = layout.description.text.toString()
-                editViewModel.addParking(loggedInViewModel.liveFirebaseUser,
-                    ParkingModel(title = title, description = description, category = category,
-                        email = loggedInViewModel.liveFirebaseUser.value?.email!!))
-            }
-        }
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -101,7 +117,8 @@ class EditFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        editViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!,
-            args.parkingid)
+        edit = args.parkingid != null
+        editViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid)
     }
+
 }

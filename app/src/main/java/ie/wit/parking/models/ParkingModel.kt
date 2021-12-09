@@ -9,11 +9,15 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ParkingModel(
       var uid: String? = "",
-      var title: String = "N/A",
-      var description: String = "N/A",
-      var category: String = "N/A",
-      var email: String? = "joe@bloggs.com")
+      var title: String = "",
+      var description: String = "",
+      var category: Int = 1,
+      var email: String? = "joe@bloggs.com",
+      var lat : Double = 0.0,
+      var lng: Double = 0.0,
+      var zoom: Float = 0f)
       : Parcelable
+
 
 {
       @Exclude
@@ -23,10 +27,17 @@ data class ParkingModel(
                   "title" to title,
                   "description" to description,
                   "category" to category,
-                  "email" to email
+                  "email" to email,
+                  "lat" to lat,
+                  "lng" to lng,
+                  "zoom" to zoom
             )
       }
 }
 
+@Parcelize
+data class Location(  var lat: Double = 0.0,
+                      var lng: Double = 0.0,
+                      var zoom: Float = 0f) : Parcelable
 
 
