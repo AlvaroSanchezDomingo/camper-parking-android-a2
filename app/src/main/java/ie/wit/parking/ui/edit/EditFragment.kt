@@ -44,7 +44,7 @@ class EditFragment : Fragment() {
 
         editViewModel = ViewModelProvider(this).get(EditViewModel::class.java)
         editViewModel.observableParking.observe(viewLifecycleOwner, {
-            renderParking(it)
+            renderParking()
         })
         editViewModel.observableStatus.observe(viewLifecycleOwner, {
                 status -> status?.let { render(status) }
@@ -94,8 +94,7 @@ class EditFragment : Fragment() {
             false -> Toast.makeText(context,getString(R.string.parkingError),Toast.LENGTH_LONG).show()
         }
     }
-    private fun renderParking(parking: ParkingModel) {
-        Timber.i("Render parking $parking")
+    private fun renderParking() {
         editViewModel.locationUpdate()
         fragBinding.parkingvm = editViewModel
     }

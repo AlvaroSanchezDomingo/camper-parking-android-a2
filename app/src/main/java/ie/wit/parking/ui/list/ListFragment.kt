@@ -47,7 +47,7 @@ class ListFragment : Fragment(), ParkingClickListener {
             findNavController().navigate(action)
         }
         showLoader(loader,"Downloading Parkings")
-        listViewModel.observableParkingList.observe(viewLifecycleOwner, Observer {
+        listViewModel.observableParkingList.observe(viewLifecycleOwner, {
                 parkings ->
             parkings?.let {
                 render(parkings as ArrayList<ParkingModel>)
@@ -75,7 +75,11 @@ class ListFragment : Fragment(), ParkingClickListener {
 
         val swipeEditHandler = object : SwipeToEditCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                onParkingClick(viewHolder.itemView.tag as ParkingModel)
+                //onParkingClick(viewHolder.itemView.tag as ParkingModel)
+                var parking = viewHolder.itemView.tag as ParkingModel
+                Timber.i("parking.uid == ${parking.uid}")
+                val action = ListFragmentDirections.actionListFragmentToEditFragment(parking.uid!!)
+                findNavController().navigate(action)
             }
         }
         val itemTouchEditHelper = ItemTouchHelper(swipeEditHandler)
@@ -138,7 +142,7 @@ class ListFragment : Fragment(), ParkingClickListener {
 
     override fun onParkingClick(parking: ParkingModel) {
         Timber.i("parking.uid == ${parking.uid}")
-        val action = ListFragmentDirections.actionListFragmentToEditFragment(parking.uid!!)
+        val action = ListFragmentDirections.actionListFragmentToViewFragment(parking.uid!!)
         findNavController().navigate(action)
     }
 }
