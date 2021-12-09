@@ -48,6 +48,7 @@
         app:layout_constraintTop_toBottomOf="@+id/title"
         tools:layout_editor_absoluteX="1dp" />
 
+
     <Button
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
@@ -61,25 +62,7 @@
         android:text="@string/saveButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.028"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.948" />
-
-    <Button
-        android:id="@+id/locationButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Location"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintHorizontal_bias="0.55"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.949" />
@@ -101,28 +84,32 @@
             android:id="@+id/Nature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
+            android:onClick="@{()->parkingvm.radioButtonCategory(1)}"
+            android:checked="@{parkingvm.observableParking.category == 1}"
             android:text="@string/Nature" />
 
         <RadioButton
             android:id="@+id/Public"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="false"
+            android:onClick="@{()->parkingvm.radioButtonCategory(2)}"
+            android:checked="@{parkingvm.observableParking.category == 2}"
             android:text="@string/Public" />
 
         <RadioButton
             android:id="@+id/Private"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="false"
+            android:onClick="@{()->parkingvm.radioButtonCategory(3)}"
+            android:checked="@{parkingvm.observableParking.category == 3}"
             android:text="@string/Private" />
 
         <RadioButton
             android:id="@+id/Camping"
             android:layout_width="97dp"
             android:layout_height="wrap_content"
-            android:checked="false"
+            android:onClick="@{()->parkingvm.radioButtonCategory(4)}"
+            android:checked="@{parkingvm.observableParking.category == 4}"
             android:text="@string/Camping" />
     </RadioGroup>
 
@@ -144,7 +131,7 @@
         android:layout_marginTop="40dp"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:text="@={``+parkingvm.observableParking.lat}"
+        android:text="@{Double.toString(parkingvm.observableParking.lat)}"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mapView" />
 

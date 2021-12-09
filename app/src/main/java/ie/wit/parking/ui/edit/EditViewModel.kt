@@ -1,5 +1,6 @@
 package ie.wit.parking.ui.edit
 
+import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,19 +16,25 @@ import timber.log.Timber
 
 class EditViewModel : ViewModel() {
 
-    private val status = MutableLiveData<Boolean>()
-    private val parking = MutableLiveData<ParkingModel>()
+
+
     private var map: GoogleMap? = null
+
+    private val _parking = MutableLiveData<ParkingModel>()
     var observableParking: LiveData<ParkingModel>
-        get() = parking
-        set(value) {parking.value = value.value}
+        get() = _parking
+        set(value) {_parking.value = value.value}
 
-
+    private val _status = MutableLiveData<Boolean>()
     val observableStatus: LiveData<Boolean>
-        get() = status
+        get() = _status
+
+    fun radioButtonCategory(category: Int){
+        _parking.value!!.category = category
+    }
 
     fun addParking(firebaseUser: MutableLiveData<FirebaseUser>, parking: ParkingModel) {
-        status.value = try {
+        _status.value = try {
             FirebaseDBManager.create(firebaseUser,parking)
             true
         } catch (e: IllegalArgumentException) {
@@ -35,7 +42,7 @@ class EditViewModel : ViewModel() {
         }
     }
     fun editParking(userid: String, parkingid: String, parking: ParkingModel) {
-        status.value = try {
+        _status.value = try {
             FirebaseDBManager.update(userid,parkingid, parking)
             true
         } catch (e: IllegalArgumentException) {
@@ -45,9 +52,9 @@ class EditViewModel : ViewModel() {
     fun getParking(userid:String, id: String?) {
         try {
 
-            FirebaseDBManager.findById(userid, id!!, parking)
+            FirebaseDBManager.findById(userid, id!!, _parking)
             Timber.i("Detail getParking() Success : ${
-                parking.value.toString()}")
+                _parking.value.toString()}")
         }
         catch (e: Exception) {
             Timber.i("Detail getDonation() Error : ${e.message}")
@@ -58,13 +65,12 @@ class EditViewModel : ViewModel() {
         map = m
     }
     fun locationUpdate() {
-
         map?.clear()
         map?.uiSettings?.setZoomControlsEnabled(true)
-        val marker = LatLng(parking.value!!.lat, parking.value!!.lng)
+        val marker = LatLng(_parking.value!!.lat, _parking.value!!.lng)
         Timber.i("locationUpdate marker: $marker")
-        val options = MarkerOptions().title(marker.toString()).position(LatLng(parking.value!!.lat, parking.value!!.lng))
+        val options = MarkerOptions().title(marker.toString()).position(marker)
         map?.addMarker(options)
-        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(parking.value!!.lat, parking.value!!.lng), 15f))
+        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 15f))
     }
 }
