@@ -1,8 +1,12 @@
 package ie.wit.parking.ui.edit
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -11,6 +15,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
+import com.squareup.picasso.Picasso
 import ie.wit.parking.R
 import ie.wit.parking.databinding.FragmentEditBinding
 import ie.wit.parking.models.ParkingModel
@@ -25,7 +30,7 @@ class EditFragment : Fragment() {
     private val args by navArgs<EditFragmentArgs>()
     private val fragBinding get() = _fragBinding!!
     private lateinit var editViewModel: EditViewModel
-
+    private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
 
     var edit: Boolean = false
 
@@ -80,7 +85,34 @@ class EditFragment : Fragment() {
 
         }
 
+        fragBinding.pickImage.setOnClickListener {
+            editViewModel.doSelectImage(imageIntentLauncher)
+        }
+        registerImagePickerCallback()
         return root;
+    }
+
+    private fun registerImagePickerCallback() {
+
+        imageIntentLauncher =
+            this.registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when(result.resultCode){
+                    AppCompatActivity.RESULT_OK -> {
+                        if (result.data != null) {
+                            Timber.i("Got Result ${result.data!!.data}")
+                            //editViewModel.setImage(result.data!!.data!!)
+                            Timber.i("Image updated")
+                            Picasso.get()
+                                .load(result.data!!.data!!)
+                                .into(fragBinding.parkingImage)
+
+                        }
+                    }
+                    AppCompatActivity.RESULT_CANCELED -> { } else -> { }
+                }
+
+            }
     }
 
 

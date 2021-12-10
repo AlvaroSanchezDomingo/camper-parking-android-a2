@@ -1,6 +1,9 @@
 package ie.wit.parking.ui.edit
 
-import androidx.databinding.Bindable
+
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,13 +13,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseUser
 import ie.wit.parking.firebase.FirebaseDBManager
-import ie.wit.parking.models.Location
+import ie.wit.parking.helpers.showImagePicker
 import ie.wit.parking.models.ParkingModel
 import timber.log.Timber
 
+
 class EditViewModel : ViewModel() {
-
-
 
     private var map: GoogleMap? = null
 
@@ -28,6 +30,7 @@ class EditViewModel : ViewModel() {
     private val _status = MutableLiveData<Boolean>()
     val observableStatus: LiveData<Boolean>
         get() = _status
+
 
     fun radioButtonCategory(category: Int){
         _parking.value!!.category = category
@@ -73,4 +76,14 @@ class EditViewModel : ViewModel() {
         map?.addMarker(options)
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 15f))
     }
+
+    fun doSelectImage(intentLauncher: ActivityResultLauncher<Intent>) {
+        showImagePicker(intentLauncher)
+    }
+
+    fun setImage(image: Uri){
+        _parking.value!!.image = image
+        Timber.i("Parking after saving image: ${_parking.value}")
+    }
+
 }
