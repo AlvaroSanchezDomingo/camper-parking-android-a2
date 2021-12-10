@@ -1,5 +1,6 @@
 package ie.wit.parking.models
 
+import android.net.Uri
 import android.os.Parcelable
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
@@ -13,6 +14,7 @@ data class ParkingModel(
       var description: String = "",
       var category: Int = 1,
       var email: String? = "joe@bloggs.com",
+      var image: Uri = Uri.EMPTY,
       var lat : Double = 0.0,
       var lng: Double = 0.0,
       var zoom: Float = 0f)

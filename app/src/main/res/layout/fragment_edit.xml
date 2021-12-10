@@ -62,10 +62,28 @@
         android:text="@string/saveButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.55"
+        app:layout_constraintHorizontal_bias="0.097"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.949" />
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/pickImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.625"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <RadioGroup
         android:id="@+id/Category"
@@ -84,51 +102,64 @@
             android:id="@+id/Nature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{()->parkingvm.radioButtonCategory(1)}"
             android:checked="@{parkingvm.observableParking.category == 1}"
+            android:onClick="@{()->parkingvm.radioButtonCategory(1)}"
             android:text="@string/Nature" />
 
         <RadioButton
             android:id="@+id/Public"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{()->parkingvm.radioButtonCategory(2)}"
             android:checked="@{parkingvm.observableParking.category == 2}"
+            android:onClick="@{()->parkingvm.radioButtonCategory(2)}"
             android:text="@string/Public" />
 
         <RadioButton
             android:id="@+id/Private"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{()->parkingvm.radioButtonCategory(3)}"
             android:checked="@{parkingvm.observableParking.category == 3}"
+            android:onClick="@{()->parkingvm.radioButtonCategory(3)}"
             android:text="@string/Private" />
 
         <RadioButton
             android:id="@+id/Camping"
             android:layout_width="97dp"
             android:layout_height="wrap_content"
-            android:onClick="@{()->parkingvm.radioButtonCategory(4)}"
             android:checked="@{parkingvm.observableParking.category == 4}"
+            android:onClick="@{()->parkingvm.radioButtonCategory(4)}"
             android:text="@string/Camping" />
     </RadioGroup>
+
+    <ImageView
+        android:id="@+id/parkingImage"
+        android:layout_width="372dp"
+        android:layout_height="144dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Category"
+        app:srcCompat="@mipmap/ic_launcher" />
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="405dp"
         android:layout_height="244dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Category" />
+        app:layout_constraintTop_toBottomOf="@+id/parkingImage" />
 
     <EditText
         android:id="@+id/lat"
         android:layout_width="131dp"
         android:layout_height="59dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="21dp"
         android:ems="10"
         android:inputType="numberDecimal"
         android:text="@{Double.toString(parkingvm.observableParking.lat)}"
@@ -139,8 +170,8 @@
         android:id="@+id/lng"
         android:layout_width="131dp"
         android:layout_height="59dp"
-        android:layout_marginStart="224dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="232dp"
+        android:layout_marginTop="21dp"
         android:ems="10"
         android:inputType="numberDecimal"
         android:text="@={``+parkingvm.observableParking.lng}"
