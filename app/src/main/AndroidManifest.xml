@@ -29,6 +29,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.home.Home" />
+        <activity
+            android:name=".ui.editlocation.EditLocationActivity"
+            android:exported="true"
+            android:label="@string/title_activity_maps" />
     </application>
 
 </manifest>

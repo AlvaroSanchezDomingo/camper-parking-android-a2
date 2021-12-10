@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseUser
 import ie.wit.parking.firebase.FirebaseDBManager
 import ie.wit.parking.helpers.showImagePicker
+import ie.wit.parking.models.Location
 import ie.wit.parking.models.ParkingModel
 import timber.log.Timber
 
@@ -84,6 +85,19 @@ class EditViewModel : ViewModel() {
     fun setImage(image: Uri){
         _parking.value!!.image = image
         Timber.i("Parking after saving image: ${_parking.value}")
+    }
+
+    fun setLocation(location: Location){
+        _parking.value!!.lat = location.lat
+        _parking.value!!.lng = location.lng
+        _parking.value!!.zoom = location.zoom
+    }
+    fun getLocation():Location{
+        var location = Location()
+        location.lat = _parking.value!!.lat
+        location.lng = _parking.value!!.lng
+        location.zoom = _parking.value!!.zoom
+        return location
     }
 
 }

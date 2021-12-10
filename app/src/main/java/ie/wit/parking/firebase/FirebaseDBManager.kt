@@ -78,13 +78,13 @@ object FirebaseDBManager : ParkingStore {
         database.updateChildren(childDelete)
     }
 
-    override fun update(userid: String, parkingnid: String, parking: ParkingModel) {
+    override fun update(userid: String, parkingid: String, parking: ParkingModel) {
 
         val parkingValues = parking.toMap()
 
         val childUpdate : MutableMap<String, Any?> = HashMap()
-        childUpdate["parkings/$parkingnid"] = parkingValues
-        childUpdate["user-parkings/$userid/$parkingnid"] = parkingValues
+        childUpdate["parkings/$parkingid"] = parkingValues
+        childUpdate["user-parkings/$userid/$parkingid"] = parkingValues
 
         database.updateChildren(childUpdate)
     }

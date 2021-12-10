@@ -18,8 +18,10 @@ import androidx.navigation.ui.NavigationUI
 import com.squareup.picasso.Picasso
 import ie.wit.parking.R
 import ie.wit.parking.databinding.FragmentEditBinding
+import ie.wit.parking.models.Location
 import ie.wit.parking.models.ParkingModel
 import ie.wit.parking.ui.auth.LoggedInViewModel
+import ie.wit.parking.ui.editlocation.EditLocationActivity
 import timber.log.Timber
 
 
@@ -31,6 +33,7 @@ class EditFragment : Fragment() {
     private val fragBinding get() = _fragBinding!!
     private lateinit var editViewModel: EditViewModel
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
 
     var edit: Boolean = false
 
@@ -59,7 +62,9 @@ class EditFragment : Fragment() {
         fragBinding.mapView.getMapAsync{googleMap ->
             editViewModel.doConfigureMap(googleMap)
             googleMap.setOnMapClickListener {
-                Timber.i("Click on map")
+                var location = editViewModel.getLocation()
+                val launcherIntent = Intent(activity, EditLocationActivity::class.java).putExtra("location", location)
+                mapIntentLauncher.launch(launcherIntent)
             }
         }
 
@@ -89,6 +94,7 @@ class EditFragment : Fragment() {
             editViewModel.doSelectImage(imageIntentLauncher)
         }
         registerImagePickerCallback()
+        registerMapCallback()
         return root;
     }
 
@@ -114,7 +120,25 @@ class EditFragment : Fragment() {
 
             }
     }
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            this.registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when (result.resultCode) {
+                    AppCompatActivity.RESULT_OK -> {
+                        if (result.data != null) {
+                            Timber.i("Got Location ${result.data.toString()}")
+                            val location = result.data!!.extras?.getParcelable<Location>("location")!!
+                            Timber.i("Location == $location")
+                            editViewModel.setLocation(location)
+                            renderParking()
+                        } // end of if
+                    }
+                    AppCompatActivity.RESULT_CANCELED -> { } else -> { }
+                }
 
+            }
+    }
 
     private fun render(status: Boolean) {
         when (status) {
@@ -154,3 +178,4 @@ class EditFragment : Fragment() {
     }
 
 }
+

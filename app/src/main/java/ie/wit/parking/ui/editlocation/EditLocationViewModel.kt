@@ -20,9 +20,9 @@ class EditLocationViewModel : ViewModel() {
         set(value) {_location.value = value.value}
 
 
-    private lateinit var map: GoogleMap
 
-    
+
+
     fun initMap(map: GoogleMap, activity: Activity) {
         val loc = LatLng(_location.value!!.lat, _location.value!!.lng)
         val options = MarkerOptions()
@@ -32,17 +32,20 @@ class EditLocationViewModel : ViewModel() {
             .position(loc)
         map.addMarker(options)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, _location.value!!.zoom))
-        map.setOnMarkerDragListener(activity)
-        map.setOnMarkerClickListener(activity)
+
     }
 
-    fun initLocation(location: Location){
+    fun setLocation(location: Location){
         _location.value = location
     }
-    fun doUpdateLocation(lat: Double, lng: Double) {
-        _location.value!!.lat = lat
-        _location.value!!.lng = lng
-        _location.value!!.zoom = map.cameraPosition.zoom
+    fun doUpdateLocation(lat: Double, lng: Double, zoom: Float) {
+        var location =Location()
+        location.lat = lat
+        location.lng = lng
+        location.zoom = zoom
+
+        _location.value = location
+
     }
 
     fun doOnBackPressed(activity: Activity) {
