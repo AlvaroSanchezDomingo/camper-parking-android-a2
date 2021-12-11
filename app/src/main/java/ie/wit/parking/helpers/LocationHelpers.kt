@@ -6,13 +6,14 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationRequest.create
 
 val REQUEST_PERMISSIONS_REQUEST_CODE = 34
 
-fun checkLocationPermissions(activity: Activity) : Boolean {
+fun checkLocationPermissions(activity: FragmentActivity) : Boolean {
     if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
         return true
     }

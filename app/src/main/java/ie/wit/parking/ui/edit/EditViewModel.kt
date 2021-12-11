@@ -86,17 +86,28 @@ class EditViewModel : ViewModel() {
         _parking.value!!.image = image
         Timber.i("Parking after saving image: ${_parking.value}")
     }
+    fun setDefaultParking(){
+        _parking.value = ParkingModel()
+    }
 
     fun setLocation(location: Location){
         _parking.value!!.lat = location.lat
         _parking.value!!.lng = location.lng
         _parking.value!!.zoom = location.zoom
+        Timber.i("setLocation parking value: ${_parking.value}")
+
     }
     fun getLocation():Location{
-        var location = Location()
-        location.lat = _parking.value!!.lat
-        location.lng = _parking.value!!.lng
-        location.zoom = _parking.value!!.zoom
+        val location = Location()
+        if(_parking.value?.lat != null){
+            location.lat = _parking.value!!.lat
+            location.lng = _parking.value!!.lng
+            location.zoom = _parking.value!!.zoom
+        }else{
+            location.lat = 37.2
+            location.lng = -6.2
+            location.zoom = 15f
+        }
         return location
     }
 

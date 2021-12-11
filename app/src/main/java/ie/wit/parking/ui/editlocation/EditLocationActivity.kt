@@ -89,6 +89,7 @@ class EditLocationActivity : AppCompatActivity() , OnMapReadyCallback, GoogleMap
 
     override fun onMarkerDragEnd(marker: Marker) {
         editLocationViewModel.doUpdateLocation(marker.position.latitude,marker.position.longitude, map.cameraPosition.zoom)
+        renderLocation()
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
