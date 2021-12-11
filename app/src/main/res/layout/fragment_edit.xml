@@ -32,48 +32,22 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="TouchTargetSizeCheck" />
 
+
     <EditText
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="16dp"
         android:inputType="text"
         android:maxLength="100"
         android:maxLines="2"
         android:minHeight="48dp"
         android:padding="8dp"
-        android:textSize="14sp"
         android:text="@={parkingvm.observableParking.description}"
+        android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@+id/title"
-        tools:layout_editor_absoluteX="1dp" />
-
-
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="196dp"
-        android:text="@string/saveButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.049"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/pickImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="428dp"
-        android:text="Image"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.049"
-        app:layout_constraintStart_toStartOf="parent" />
+        tools:layout_editor_absoluteX="8dp" />
 
     <RadioGroup
         android:id="@+id/Category"
@@ -123,8 +97,8 @@
 
     <ImageView
         android:id="@+id/parkingImage"
-        android:layout_width="202dp"
-        android:layout_height="142dp"
+        android:layout_width="262dp"
+        android:layout_height="269dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="5dp"
@@ -138,35 +112,11 @@
         android:id="@+id/mapView"
         android:layout_width="405dp"
         android:layout_height="244dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/parkingImage" />
-
-    <EditText
-        android:id="@+id/lat"
-        android:layout_width="131dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="21dp"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        android:text="@{Double.toString(parkingvm.observableParking.lat)}"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapView" />
-
-    <EditText
-        android:id="@+id/lng"
-        android:layout_width="131dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="232dp"
-        android:layout_marginTop="21dp"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        android:text="@={``+parkingvm.observableParking.lng}"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

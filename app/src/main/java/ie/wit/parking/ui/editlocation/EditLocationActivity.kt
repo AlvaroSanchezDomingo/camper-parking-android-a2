@@ -35,7 +35,7 @@ class EditLocationActivity : AppCompatActivity() , OnMapReadyCallback, GoogleMap
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.getMapAsync{
             map = it
-            editLocationViewModel.initMap(map, this)
+            //editLocationViewModel.initMap(map, this)
             map.setOnMarkerDragListener(this)
             map.setOnMarkerClickListener(this)
         }

@@ -25,7 +25,7 @@ class EditLocationViewModel : ViewModel() {
 
     fun initMap(map: GoogleMap, activity: Activity) {
         val loc = LatLng(_location.value!!.lat, _location.value!!.lng)
-        map?.uiSettings?.setZoomControlsEnabled(true)
+        map.uiSettings.isZoomControlsEnabled = true
         val options = MarkerOptions()
             .title("Placemark")
             .snippet("GPS : $loc")

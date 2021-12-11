@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseUser
@@ -37,8 +38,10 @@ class EditViewModel : ViewModel() {
         _parking.value!!.category = category
     }
 
-    fun addParking(firebaseUser: MutableLiveData<FirebaseUser>, parking: ParkingModel) {
+    fun addParking(firebaseUser: MutableLiveData<FirebaseUser>) {
         _status.value = try {
+            var parking = ParkingModel(title = _parking.value!!.title, description = _parking.value!!.description, category = _parking.value!!.category,
+                email = firebaseUser.value?.email!!, lat = _parking.value!!.lat, lng = _parking.value!!.lng, zoom=15f)
             FirebaseDBManager.create(firebaseUser,parking)
             true
         } catch (e: IllegalArgumentException) {
@@ -67,12 +70,11 @@ class EditViewModel : ViewModel() {
 
     fun doConfigureMap(m: GoogleMap) {
         map = m
+        map?.uiSettings?.isZoomControlsEnabled = true
     }
-    fun locationUpdate() {
+    fun mapLocationUpdate() {
         map?.clear()
-        map?.uiSettings?.setZoomControlsEnabled(true)
         val marker = LatLng(_parking.value!!.lat, _parking.value!!.lng)
-        Timber.i("locationUpdate marker: $marker")
         val options = MarkerOptions().title(marker.toString()).position(marker)
         map?.addMarker(options)
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 15f))
@@ -86,17 +88,16 @@ class EditViewModel : ViewModel() {
         _parking.value!!.image = image
         Timber.i("Parking after saving image: ${_parking.value}")
     }
-    fun setDefaultParking(){
-        _parking.value = ParkingModel()
+    fun setDefaultParking(userid:String){
+        _parking.value = ParkingModel(email=userid)
     }
 
-    fun setLocation(location: Location){
+    fun setParkingLocation(location: Location){
         _parking.value!!.lat = location.lat
         _parking.value!!.lng = location.lng
         _parking.value!!.zoom = location.zoom
-        Timber.i("setLocation parking value: ${_parking.value}")
-
     }
+
     fun getLocation():Location{
         val location = Location()
         if(_parking.value?.lat != null){
@@ -104,9 +105,9 @@ class EditViewModel : ViewModel() {
             location.lng = _parking.value!!.lng
             location.zoom = _parking.value!!.zoom
         }else{
-            location.lat = 37.2
-            location.lng = -6.2
-            location.zoom = 15f
+            location.lat = 0.0
+            location.lng = 0.0
+            location.zoom = 0f
         }
         return location
     }
