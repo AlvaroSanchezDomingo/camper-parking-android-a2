@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
 import ie.wit.parking.R
 import ie.wit.parking.databinding.FragmentViewBinding
 import ie.wit.parking.models.ParkingModel
@@ -15,7 +17,7 @@ import ie.wit.parking.ui.auth.LoggedInViewModel
 import timber.log.Timber
 
 
-class ViewFragment : Fragment() {
+class ViewFragment : Fragment() , OnMapReadyCallback {
 
     private var _fragBinding: FragmentViewBinding? = null
     // This property is only valid between onCreateView and onDestroyView.
@@ -25,6 +27,8 @@ class ViewFragment : Fragment() {
 
 
     var edit: Boolean = false
+    var mapReady: Boolean = false
+    var locationReady: Boolean = false
 
     private val loggedInViewModel : LoggedInViewModel by activityViewModels()
 
@@ -45,21 +49,34 @@ class ViewFragment : Fragment() {
             renderParking()
         })
 
-        fragBinding.mapView.onCreate(savedInstanceState);
-        fragBinding.mapView.getMapAsync{googleMap ->
-            viewViewModel.doConfigureMap(googleMap)
-            googleMap.setOnMapClickListener {
-                Timber.i("Click on map")
-            }
-        }
 
         return root;
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        fragBinding.mapView.onCreate(savedInstanceState);
+        fragBinding.mapView.onResume();
+        fragBinding.mapView.getMapAsync(this)
+    }
 
+    override fun onMapReady(m: GoogleMap) {
+        Timber.i("ON MAP READY")
+        viewViewModel.doConfigureMap(m)
+        mapReady = true
+        locationUpdate()
 
+    }
+    private fun locationUpdate(){
+        if(mapReady && locationReady){
+            Timber.i("MAP AND LOCATION READY $mapReady $locationReady")
+            viewViewModel.mapLocationUpdate()
+        }
+    }
     private fun renderParking() {
-        viewViewModel.locationUpdate()
         fragBinding.viewvm = viewViewModel
+        Timber.i("ON LOCATION READY")
+        locationReady = true
+        locationUpdate()
     }
 
 

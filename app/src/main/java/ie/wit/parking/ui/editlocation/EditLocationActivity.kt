@@ -3,6 +3,7 @@ package ie.wit.parking.ui.editlocation
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.GoogleMap
@@ -12,6 +13,7 @@ import ie.wit.parking.databinding.ActivityMapsBinding
 import ie.wit.parking.models.Location
 import ie.wit.parking.ui.auth.LoginRegisterViewModel
 import ie.wit.parking.ui.home.Home
+import timber.log.Timber
 
 
 class EditLocationActivity : AppCompatActivity() , OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener
@@ -32,13 +34,9 @@ class EditLocationActivity : AppCompatActivity() , OnMapReadyCallback, GoogleMap
         setContentView(binding.root)
 
 
-        binding.mapView.onCreate(savedInstanceState)
-        binding.mapView.getMapAsync{
-            map = it
-            //editLocationViewModel.initMap(map, this)
-            map.setOnMarkerDragListener(this)
-            map.setOnMarkerClickListener(this)
-        }
+        binding.mapView.onCreate(savedInstanceState);
+        binding.mapView.onResume();
+        binding.mapView.getMapAsync(this)
 
         editLocationViewModel.observableLocation.observe(this, {
             renderLocation()
@@ -78,7 +76,11 @@ class EditLocationActivity : AppCompatActivity() , OnMapReadyCallback, GoogleMap
 
 
     override fun onMapReady(googleMap: GoogleMap) {
+        Timber.i("MAP READY")
+        map = googleMap
         editLocationViewModel.initMap(googleMap, this)
+        map.setOnMarkerDragListener(this)
+        map.setOnMarkerClickListener(this)
     }
 
     override fun onMarkerDragStart(marker: Marker) {

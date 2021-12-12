@@ -19,19 +19,15 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.squareup.picasso.Picasso
 import ie.wit.parking.R
 import ie.wit.parking.databinding.FragmentEditBinding
 import ie.wit.parking.helpers.checkLocationPermissions
 import ie.wit.parking.helpers.createDefaultLocationRequest
 import ie.wit.parking.models.Location
-import ie.wit.parking.models.ParkingModel
 import ie.wit.parking.ui.auth.LoggedInViewModel
 import ie.wit.parking.ui.editlocation.EditLocationActivity
 import timber.log.Timber
@@ -51,15 +47,18 @@ class EditFragment : Fragment() , OnMapReadyCallback {
     private lateinit var locationService : FusedLocationProviderClient
     private val locationRequest = createDefaultLocationRequest()
     var edit: Boolean = false
-    private lateinit var map: GoogleMap
-    private lateinit var mapView: MapView
     var mapReady : Boolean = false
-    var parkingReady : Boolean = false
+    var locationReady : Boolean = false
+    var locationEdited : Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         locationService = LocationServices.getFusedLocationProviderClient(requireContext())
+
+
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -82,10 +81,12 @@ class EditFragment : Fragment() , OnMapReadyCallback {
                 status -> status?.let { render(status) }
         })
 
-        edit = args.parkingid != null
+        edit = arguments?.isEmpty == false
         if(edit){
+            Timber.i("EDIT ${args.parkingid}")
             editViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid)
         }else{
+            Timber.i("NEW")
             editViewModel.setDefaultParking(loggedInViewModel.liveFirebaseUser.value?.uid!!)
             if (checkLocationPermissions(requireActivity())) {
                 doSetCurrentLocation()
@@ -106,12 +107,12 @@ class EditFragment : Fragment() , OnMapReadyCallback {
         Timber.i("ON MAP READY")
         editViewModel.doConfigureMap(m)
         mapReady = true
-        mapAndParkingReady()
+        locationUpdate()
 
     }
-    private fun mapAndParkingReady(){
-        if(mapReady && parkingReady){
-            Timber.i("MAP AND PARKING READY ")
+    private fun locationUpdate(){
+        if(mapReady && locationReady){
+            Timber.i("MAP AND LOCATION READY $mapReady $locationReady")
             editViewModel.mapLocationUpdate()
         }
     }
@@ -128,8 +129,12 @@ class EditFragment : Fragment() , OnMapReadyCallback {
 
     private fun renderParking() {
         fragBinding.parkingvm = editViewModel
-        parkingReady = true
-        mapAndParkingReady()
+        if(edit){
+            Timber.i("ON LOCATION READY")
+            locationReady = true
+            locationUpdate()
+        }
+
     }
 
 
@@ -178,18 +183,22 @@ class EditFragment : Fragment() , OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         doRestartLocationUpdates()
+
     }
     @SuppressLint("MissingPermission")
     fun doRestartLocationUpdates() {
         var locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
-                if (locationResult != null && locationResult.locations != null) {
+                if (locationResult != null && !locationEdited) {
                     val l = locationResult.locations.last()
                     val location = Location()
                     location.lat = l.latitude
                     location.lng = l.longitude
                     location.zoom = 15f
                     editViewModel.setParkingLocation(location)
+                    Timber.i("LOCATION READY")
+                    locationReady = true
+                    locationUpdate()
                 }
             }
         }
@@ -206,6 +215,9 @@ class EditFragment : Fragment() , OnMapReadyCallback {
             location.zoom = 15f
             Timber.i("CURRENT LOCATION $location")
             editViewModel.setParkingLocation(location)
+            Timber.i("LOCATION READY")
+            locationReady = true
+            locationUpdate()
         }
     }
     private fun doPermissionLauncher() {
@@ -220,7 +232,9 @@ class EditFragment : Fragment() , OnMapReadyCallback {
                     location.lng = -10.0
                     location.zoom = 15f
                     editViewModel.setParkingLocation(location)
-                    renderParking()
+                    Timber.i("LOCATION READY")
+                    locationReady = true
+                    locationUpdate()
                 }
             }
     }
@@ -253,10 +267,13 @@ class EditFragment : Fragment() , OnMapReadyCallback {
                 when (result.resultCode) {
                     AppCompatActivity.RESULT_OK -> {
                         if (result.data != null) {
-                            Timber.i("Got Location ${result.data.toString()}")
                             val location = result.data!!.extras?.getParcelable<Location>("location")!!
+                            Timber.i("Location EXTRA $location")
                             editViewModel.setParkingLocation(location)
-                            renderParking()
+                            Timber.i("LOCATION READY")
+                            locationEdited = true
+                            locationReady = true
+                            locationUpdate()
                         } // end of if
                     }
                     AppCompatActivity.RESULT_CANCELED -> { } else -> { }

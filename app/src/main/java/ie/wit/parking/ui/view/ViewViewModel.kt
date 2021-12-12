@@ -36,16 +36,17 @@ class ViewViewModel : ViewModel() {
         }
     }
 
+
     fun doConfigureMap(m: GoogleMap) {
         map = m
+        map?.uiSettings?.isZoomControlsEnabled = true
     }
-    fun locationUpdate() {
+    fun mapLocationUpdate() {
         map?.clear()
-        map?.uiSettings?.setZoomControlsEnabled(true)
         val marker = LatLng(_parking.value!!.lat, _parking.value!!.lng)
-        Timber.i("locationUpdate marker: $marker")
         val options = MarkerOptions().title(marker.toString()).position(marker)
         map?.addMarker(options)
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 15f))
     }
+
 }
