@@ -10,7 +10,7 @@
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/editFragment"
+    android:id="@+id/viewFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.edit.EditFragment">
