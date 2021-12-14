@@ -1,48 +1,79 @@
 package ie.wit.parking.ui.edit
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.squareup.picasso.Picasso
 import ie.wit.parking.R
 import ie.wit.parking.databinding.FragmentEditBinding
-import ie.wit.parking.models.ParkingModel
+import ie.wit.parking.helpers.checkLocationPermissions
+import ie.wit.parking.helpers.createDefaultLocationRequest
+import ie.wit.parking.models.Location
 import ie.wit.parking.ui.auth.LoggedInViewModel
+import ie.wit.parking.ui.editlocation.EditLocationActivity
 import timber.log.Timber
 
 
-class EditFragment : Fragment() {
+class EditFragment : Fragment() , OnMapReadyCallback {
 
     private var _fragBinding: FragmentEditBinding? = null
     // This property is only valid between onCreateView and onDestroyView.
     private val args by navArgs<EditFragmentArgs>()
     private val fragBinding get() = _fragBinding!!
     private lateinit var editViewModel: EditViewModel
-
-
-    var edit: Boolean = false
-
+    private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private val loggedInViewModel : LoggedInViewModel by activityViewModels()
+    private lateinit var locationService : FusedLocationProviderClient
+    private val locationRequest = createDefaultLocationRequest()
+    var edit: Boolean = false
+    var mapReady : Boolean = false
+    var locationReady : Boolean = false
+    var locationEdited : Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        locationService = LocationServices.getFusedLocationProviderClient(requireContext())
+
+
 
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
+        registerImagePickerCallback()
+        registerMapCallback()
+        doPermissionLauncher()
+
         _fragBinding = FragmentEditBinding.inflate(inflater, container, false)
         val root = fragBinding.root
 
+
         editViewModel = ViewModelProvider(this).get(EditViewModel::class.java)
+
         editViewModel.observableParking.observe(viewLifecycleOwner, {
             renderParking()
         })
@@ -50,40 +81,41 @@ class EditFragment : Fragment() {
                 status -> status?.let { render(status) }
         })
 
-        fragBinding.mapView.onCreate(savedInstanceState);
-        fragBinding.mapView.getMapAsync{googleMap ->
-            editViewModel.doConfigureMap(googleMap)
-            googleMap.setOnMapClickListener {
-                Timber.i("Click on map")
+        edit = arguments?.isEmpty == false
+        if(edit){
+            Timber.i("EDIT ${args.parkingid}")
+            editViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid)
+        }else{
+            Timber.i("NEW")
+            editViewModel.setDefaultParking(loggedInViewModel.liveFirebaseUser.value?.uid!!)
+            if (checkLocationPermissions(requireActivity())) {
+                doSetCurrentLocation()
             }
-        }
-
-        fragBinding.saveButton.setOnClickListener {
-            val category = when (fragBinding.Category.checkedRadioButtonId) {
-                R.id.Nature -> 1
-                R.id.Public -> 2
-                R.id.Private -> 3
-                R.id.Camping -> 4
-                else -> 1
-            }
-            val title = fragBinding.title.text.toString()
-            val description = fragBinding.description.text.toString()
-            val lat = fragBinding.lat.text.toString().toDouble()
-            val lng = fragBinding.lng.text.toString().toDouble()
-            if(edit){
-                editViewModel.editParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid!!,fragBinding.parkingvm?.observableParking!!.value!!)
-            }else{
-                editViewModel.addParking(loggedInViewModel.liveFirebaseUser,
-                    ParkingModel(title = title, description = description, category = category,
-                        email = loggedInViewModel.liveFirebaseUser.value?.email!!, lat = lat, lng = lng))
-            }
-
         }
 
         return root;
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        fragBinding.mapView.onCreate(savedInstanceState);
+        fragBinding.mapView.onResume();
+        fragBinding.mapView.getMapAsync(this)
+    }
 
+    override fun onMapReady(m: GoogleMap) {
+        Timber.i("ON MAP READY")
+        editViewModel.doConfigureMap(m)
+        mapReady = true
+        locationUpdate()
+
+    }
+    private fun locationUpdate(){
+        if(mapReady && locationReady){
+            Timber.i("MAP AND LOCATION READY $mapReady $locationReady")
+            editViewModel.mapLocationUpdate()
+        }
+    }
     private fun render(status: Boolean) {
         when (status) {
             true -> {
@@ -94,9 +126,15 @@ class EditFragment : Fragment() {
             false -> Toast.makeText(context,getString(R.string.parkingError),Toast.LENGTH_LONG).show()
         }
     }
+
     private fun renderParking() {
-        editViewModel.locationUpdate()
         fragBinding.parkingvm = editViewModel
+        if(edit){
+            Timber.i("ON LOCATION READY")
+            locationReady = true
+            locationUpdate()
+        }
+
     }
 
 
@@ -106,9 +144,36 @@ class EditFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(item,
-                requireView().findNavController()) || super.onOptionsItemSelected(item)
+
+        return when (item.itemId) {
+            R.id.listFragment -> {
+                NavigationUI.onNavDestinationSelected(item,
+                    requireView().findNavController()) || super.onOptionsItemSelected(item)
+            }
+            R.id.save -> {
+                if(edit){
+                    Timber.i("EDIT PARKING ${fragBinding.parkingvm?.observableParking!!.value!!}")
+                    editViewModel.editParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid!!,fragBinding.parkingvm?.observableParking!!.value!!)
+                }else{
+                    editViewModel.addParking(loggedInViewModel.liveFirebaseUser)
+                }
+                true
+            }
+
+            R.id.location -> {
+                var location = editViewModel.getLocation()
+                val launcherIntent = Intent(activity, EditLocationActivity::class.java).putExtra("location", location)
+                mapIntentLauncher.launch(launcherIntent)
+                true
+            }
+            R.id.image -> {
+                editViewModel.doSelectImage(imageIntentLauncher)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -117,8 +182,106 @@ class EditFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        edit = args.parkingid != null
-        editViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid)
+        doRestartLocationUpdates()
+
+    }
+    @SuppressLint("MissingPermission")
+    fun doRestartLocationUpdates() {
+        var locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                if (locationResult != null && !locationEdited) {
+                    val l = locationResult.locations.last()
+                    val location = Location()
+                    location.lat = l.latitude
+                    location.lng = l.longitude
+                    location.zoom = 15f
+                    editViewModel.setParkingLocation(location)
+                    Timber.i("LOCATION READY")
+                    locationReady = true
+                    locationUpdate()
+                }
+            }
+        }
+        if (!edit) {
+            locationService.requestLocationUpdates(locationRequest, locationCallback, null)
+        }
+    }
+    @SuppressLint("MissingPermission")
+    fun doSetCurrentLocation() {
+        locationService.lastLocation.addOnSuccessListener {
+            val location = Location()
+            location.lat = it.latitude
+            location.lng = it.longitude
+            location.zoom = 15f
+            Timber.i("CURRENT LOCATION $location")
+            editViewModel.setParkingLocation(location)
+            Timber.i("LOCATION READY")
+            locationReady = true
+            locationUpdate()
+        }
+    }
+    private fun doPermissionLauncher() {
+        requestPermissionLauncher =
+            this.registerForActivityResult(ActivityResultContracts.RequestPermission())
+            { isGranted: Boolean ->
+                if (isGranted) {
+                    doSetCurrentLocation()
+                } else {
+                    val location = Location()
+                    location.lat = 40.0
+                    location.lng = -10.0
+                    location.zoom = 15f
+                    editViewModel.setParkingLocation(location)
+                    Timber.i("LOCATION READY")
+                    locationReady = true
+                    locationUpdate()
+                }
+            }
     }
 
+    private fun registerImagePickerCallback() {
+
+        imageIntentLauncher =
+            this.registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when(result.resultCode){
+                    AppCompatActivity.RESULT_OK -> {
+                        if (result.data != null) {
+                            Timber.i("Got Image Result ${result.data!!.data}")
+                            //editViewModel.setImage(result.data!!.data!!)
+                            Picasso.get()
+                                .load(result.data!!.data!!)
+                                .into(fragBinding.parkingImage)
+
+                        }
+                    }
+                    AppCompatActivity.RESULT_CANCELED -> { } else -> { }
+                }
+
+            }
+    }
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            this.registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when (result.resultCode) {
+                    AppCompatActivity.RESULT_OK -> {
+                        if (result.data != null) {
+                            val location = result.data!!.extras?.getParcelable<Location>("location")!!
+                            Timber.i("Location EXTRA $location")
+                            editViewModel.setParkingLocation(location)
+                            Timber.i("LOCATION READY")
+                            locationEdited = true
+                            locationReady = true
+                            locationUpdate()
+                        } // end of if
+                    }
+                    AppCompatActivity.RESULT_CANCELED -> { } else -> { }
+                }
+
+            }
+    }
+
+
 }
+
