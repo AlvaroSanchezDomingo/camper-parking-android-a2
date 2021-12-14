@@ -81,7 +81,7 @@ class EditFragment : Fragment() , OnMapReadyCallback {
                 status -> status?.let { render(status) }
         })
 
-        edit = arguments?.isEmpty == false
+        edit = args.parkingid != null && args.parkingid != "null"
         if(edit){
             Timber.i("EDIT ${args.parkingid}")
             editViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid)

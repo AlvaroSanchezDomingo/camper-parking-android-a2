@@ -1,9 +1,9 @@
 package ie.wit.parking.ui.list
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -19,7 +19,6 @@ import ie.wit.parking.adapters.ParkingClickListener
 import ie.wit.parking.databinding.FragmentListBinding
 import ie.wit.parking.models.ParkingModel
 import ie.wit.parking.ui.auth.LoggedInViewModel
-import ie.wit.parking.ui.editlocation.EditLocationActivity
 import ie.wit.parking.utils.*
 import timber.log.Timber
 
@@ -58,6 +57,7 @@ class ListFragment : Fragment(), ParkingClickListener {
             }
         })
 
+
         setSwipeRefresh()
 
         val swipeDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
@@ -93,6 +93,18 @@ class ListFragment : Fragment(), ParkingClickListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_list, menu)
+
+        val item = menu.findItem(R.id.toggleDonations) as MenuItem
+        item.setActionView(R.layout.togglebutton_layout)
+        val toggleDonations: SwitchCompat = item.actionView.findViewById(R.id.toggleButton)
+        toggleDonations.isChecked = false
+
+        toggleDonations.setOnCheckedChangeListener { buttonView, isChecked ->
+            Timber.i("isChecked == $isChecked")
+            if (isChecked) listViewModel.loadAll()
+            else listViewModel.load()
+        }
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -103,15 +115,6 @@ class ListFragment : Fragment(), ParkingClickListener {
                 NavigationUI.onNavDestinationSelected(item,
                     requireView().findNavController()) || super.onOptionsItemSelected(item)
             }
-            R.id.user_switch -> {
-                if(item.isChecked){
-                    Timber.i("checked")
-                }else{
-                    Timber.i("unchecked")
-                }
-                true
-            }
-
             else -> super.onOptionsItemSelected(item)
         }
 

@@ -3,12 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/user_switch"
-        android:orderInCategory="103"
-        android:title="Switch"
-        android:checkable="true"
-        app:actionLayout="@layout/switch_item"
-        app:showAsAction="always"/>
+        android:id="@+id/toggleDonations"
+        android:title=""
+        app:actionLayout="@layout/togglebutton_layout"
+        app:showAsAction="always" />
     <item
         android:id="@+id/editFragment"
         android:orderInCategory="102"

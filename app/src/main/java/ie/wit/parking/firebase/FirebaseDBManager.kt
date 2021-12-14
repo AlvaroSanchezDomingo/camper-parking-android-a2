@@ -12,7 +12,25 @@ object FirebaseDBManager : ParkingStore {
     var database: DatabaseReference = FirebaseDatabase.getInstance().reference
 
     override fun findAll(parkingsList: MutableLiveData<List<ParkingModel>>) {
-        TODO("Not yet implemented")
+        database.child("parkings")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Timber.i("Firebase Parking error : ${error.message}")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val localList = ArrayList<ParkingModel>()
+                    val children = snapshot.children
+                    children.forEach {
+                        val parking = it.getValue(ParkingModel::class.java)
+                        localList.add(parking!!)
+                    }
+                    database.child("parkings")
+                        .removeEventListener(this)
+
+                    parkingsList.value = localList
+                }
+            })
     }
 
     override fun findAll(userid: String, parkingsList: MutableLiveData<List<ParkingModel>>) {

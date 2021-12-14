@@ -20,7 +20,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ui.auth.Login"
+            android:name=".ui.splash.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,6 +29,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.home.Home" />
+        <activity android:name=".ui.auth.Login" />
         <activity
             android:name=".ui.editlocation.EditLocationActivity"
             android:exported="true"
