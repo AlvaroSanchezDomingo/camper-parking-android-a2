@@ -1,6 +1,7 @@
 package ie.wit.parking.ui.list
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -18,6 +19,7 @@ import ie.wit.parking.adapters.ParkingClickListener
 import ie.wit.parking.databinding.FragmentListBinding
 import ie.wit.parking.models.ParkingModel
 import ie.wit.parking.ui.auth.LoggedInViewModel
+import ie.wit.parking.ui.editlocation.EditLocationActivity
 import ie.wit.parking.utils.*
 import timber.log.Timber
 
@@ -95,8 +97,24 @@ class ListFragment : Fragment(), ParkingClickListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(item,
-            requireView().findNavController()) || super.onOptionsItemSelected(item)
+
+        return when (item.itemId) {
+            R.id.editFragment -> {
+                NavigationUI.onNavDestinationSelected(item,
+                    requireView().findNavController()) || super.onOptionsItemSelected(item)
+            }
+            R.id.user_switch -> {
+                if(item.isChecked){
+                    Timber.i("checked")
+                }else{
+                    Timber.i("unchecked")
+                }
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+
     }
 
     private fun render(donationsList: ArrayList<ParkingModel>) {

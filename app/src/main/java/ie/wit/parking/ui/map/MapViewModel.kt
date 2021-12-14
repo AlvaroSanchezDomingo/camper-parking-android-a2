@@ -24,8 +24,7 @@ class MapViewModel : ViewModel() {
     fun getUserParkings(userid:String) {
         try {
             FirebaseDBManager.findAll(userid, _parkings)
-            Timber.i("Detail getUserParkings() Success : ${
-                _parkings.value.toString()}")
+            Timber.i("Detail getUserParkings() Success : %s", _parkings.value.toString())
         }
         catch (e: Exception) {
             Timber.i("Detail getUserParkings() Error : ${e.message}")
