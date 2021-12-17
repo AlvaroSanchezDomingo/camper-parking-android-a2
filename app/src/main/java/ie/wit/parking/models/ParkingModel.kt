@@ -14,7 +14,7 @@ data class ParkingModel(
       var description: String = "",
       var category: Int = 1,
       var email: String? = "joe@bloggs.com",
-      var image: Uri = Uri.EMPTY,
+      var image: String = "",
       var lat : Double = 0.0,
       var lng: Double = 0.0,
       var zoom: Float = 0f)
@@ -30,6 +30,7 @@ data class ParkingModel(
                   "description" to description,
                   "category" to category,
                   "email" to email,
+                  "image" to image,
                   "lat" to lat,
                   "lng" to lng,
                   "zoom" to zoom

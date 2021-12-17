@@ -1,5 +1,6 @@
 package ie.wit.parking.ui.view
 
+import android.widget.ImageView
 import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +10,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseUser
+import com.squareup.picasso.Picasso
 import ie.wit.parking.firebase.FirebaseDBManager
 import ie.wit.parking.models.Location
 import ie.wit.parking.models.ParkingModel
@@ -35,7 +37,12 @@ class ViewViewModel : ViewModel() {
             Timber.i("Detail getDonation() Error : ${e.message}")
         }
     }
-
+    fun loadImage(image: String, imageView: ImageView){
+        Picasso.get()
+            .load(image)
+            .resize(200, 200)
+            .into(imageView)
+    }
 
     fun doConfigureMap(m: GoogleMap) {
         map = m

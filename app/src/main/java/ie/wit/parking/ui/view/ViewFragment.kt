@@ -46,7 +46,7 @@ class ViewFragment : Fragment() , OnMapReadyCallback {
         viewViewModel = ViewModelProvider(this).get(ViewViewModel::class.java)
 
         viewViewModel.observableParking.observe(viewLifecycleOwner, {
-            renderParking()
+            renderParking(it)
         })
 
 
@@ -72,11 +72,14 @@ class ViewFragment : Fragment() , OnMapReadyCallback {
             viewViewModel.mapLocationUpdate()
         }
     }
-    private fun renderParking() {
+    private fun renderParking(parking: ParkingModel) {
         fragBinding.viewvm = viewViewModel
         Timber.i("ON LOCATION READY")
         locationReady = true
         locationUpdate()
+        if(parking.image != ""){
+            viewViewModel.loadImage(parking.image, fragBinding.imageView)
+        }
     }
 
 
