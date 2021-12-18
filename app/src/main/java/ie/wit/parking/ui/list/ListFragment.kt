@@ -120,9 +120,9 @@ class ListFragment : Fragment(), ParkingClickListener {
 
     }
 
-    private fun render(donationsList: ArrayList<ParkingModel>) {
-        fragBinding.recyclerView.adapter = ParkingAdapter(donationsList,this)
-        if (donationsList.isEmpty()) {
+    private fun render(parkingList: ArrayList<ParkingModel>) {
+        fragBinding.recyclerView.adapter = ParkingAdapter(parkingList,this)
+        if (parkingList.isEmpty()) {
             fragBinding.recyclerView.visibility = View.GONE
             fragBinding.donationsNotFound.visibility = View.VISIBLE
         } else {
@@ -153,7 +153,7 @@ class ListFragment : Fragment(), ParkingClickListener {
                 listViewModel.load()
             }
         })
-        //hideLoader(loader)
+
     }
 
     override fun onDestroyView() {

@@ -23,7 +23,7 @@ class ListViewModel : ViewModel() {
 
     fun load() {
         try {
-            FirebaseDBManager.findAll(liveFirebaseUser.value?.uid!!,
+            FirebaseDBManager.findAll(liveFirebaseUser.value?.email!!,
                 parkingList)
             Timber.i("List Load Success : ${parkingList.value.toString()}")
         }

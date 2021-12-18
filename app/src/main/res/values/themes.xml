@@ -67,4 +67,14 @@
         <item name="colorControlActivated">@color/colorWhite</item>
         <item name="colorControlHighlight">@color/black</item>
     </style>
+
+    <style name="RatingBar" parent="Theme.MaterialComponents.DayNight">
+        <item name="ratingBarStyle">@style/Controls.RatingBar</item>
+        <item name="colorControlActivated">@color/color_primary</item>
+        <item name="colorControlNormal">@color/color_secondary</item>
+    </style>
+
+    <style name="Controls.RatingBar" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="android:isIndicator">false</item>
+    </style>
 </resources>
