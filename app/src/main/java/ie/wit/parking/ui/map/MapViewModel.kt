@@ -21,9 +21,9 @@ class MapViewModel : ViewModel() {
         get() = _parkings
         set(value) {_parkings.value = value.value}
 
-    fun load(userid:String) {
+    fun load(email:String) {
         try {
-            FirebaseDBManager.findAll(userid, _parkings)
+            FirebaseDBManager.findAll(email, _parkings)
             Timber.i("Detail getUserParkings() Success : %s", _parkings.value.toString())
         }
         catch (e: Exception) {

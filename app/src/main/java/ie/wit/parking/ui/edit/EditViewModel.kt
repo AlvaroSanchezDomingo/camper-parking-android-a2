@@ -18,6 +18,7 @@ import ie.wit.parking.firebase.FirebaseDBManager
 import ie.wit.parking.helpers.showImagePicker
 import ie.wit.parking.models.Location
 import ie.wit.parking.models.ParkingModel
+import ie.wit.parking.models.Review
 import timber.log.Timber
 
 
@@ -42,7 +43,7 @@ class EditViewModel : ViewModel() {
     fun addParking(firebaseUser: MutableLiveData<FirebaseUser>, context: Context) {
         _status.value = try {
             var parking = ParkingModel(title = _parking.value!!.title, description = _parking.value!!.description, category = _parking.value!!.category,
-                image = _parking.value!!.image, email = firebaseUser.value?.email!!, lat = _parking.value!!.lat, lng = _parking.value!!.lng, zoom=15f)
+                image = _parking.value!!.image, email = firebaseUser.value?.email!!, lat = _parking.value!!.lat, lng = _parking.value!!.lng, zoom=15f, reviews = hashMapOf())
             FirebaseDBManager.create(firebaseUser,parking, context)
             true
         } catch (e: IllegalArgumentException) {

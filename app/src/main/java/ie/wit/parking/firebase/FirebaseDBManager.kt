@@ -11,10 +11,9 @@ import com.google.firebase.storage.StorageReference
 import ie.wit.parking.helpers.readImageFromPath
 import ie.wit.parking.models.ParkingModel
 import ie.wit.parking.models.ParkingStore
-import kotlinx.coroutines.*
+import ie.wit.parking.models.Review
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
-import kotlin.system.measureTimeMillis
 
 
 object FirebaseDBManager: ParkingStore {
@@ -44,38 +43,72 @@ object FirebaseDBManager: ParkingStore {
             })
     }
 
-    override fun findAll(userid: String, parkingsList: MutableLiveData<List<ParkingModel>>) {
+    override fun findAll(email: String, parkingsList: MutableLiveData<List<ParkingModel>>) {
 
-        database.child("user-parkings").child(userid)
+//        database.child("user-parkings").child(userid)
+//            .addValueEventListener(object : ValueEventListener {
+//                override fun onCancelled(error: DatabaseError) {
+//                    Timber.i("Firebase Parking error : ${error.message}")
+//                }
+//
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    val localList = ArrayList<ParkingModel>()
+//                    val children = snapshot.children
+//                    children.forEach {
+//                        val parking = it.getValue(ParkingModel::class.java)
+//                        localList.add(parking!!)
+//                    }
+//                    database.child("user-parkings").child(userid)
+//                        .removeEventListener(this)
+//
+//                    parkingsList.value = localList
+//                }
+//            })
+            Timber.i("Find all by user : $email")
+                database.child("parkings")
             .addValueEventListener(object : ValueEventListener {
+
                 override fun onCancelled(error: DatabaseError) {
                     Timber.i("Firebase Parking error : ${error.message}")
                 }
-
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    Timber.i("STEP 1")
                     val localList = ArrayList<ParkingModel>()
                     val children = snapshot.children
                     children.forEach {
+                        Timber.i("STEP 2 ${it.value}")
                         val parking = it.getValue(ParkingModel::class.java)
-                        localList.add(parking!!)
+                        if(parking!!.email == email){
+                            Timber.i("STEP 3")
+                            localList.add(parking)
+                        }
                     }
-                    database.child("user-parkings").child(userid)
+                    database.child("parkings")
                         .removeEventListener(this)
 
                     parkingsList.value = localList
                 }
             })
+
     }
 
     override fun findById(userid: String, parkingid: String, parking: MutableLiveData<ParkingModel>) {
 
-        database.child("user-parkings").child(userid)
-            .child(parkingid).get().addOnSuccessListener {
+//        database.child("user-parkings").child(userid)
+//            .child(parkingid).get().addOnSuccessListener {
+//                parking.value = it.getValue(ParkingModel::class.java)
+//                Timber.i("firebase Got value ${it.value}")
+//            }.addOnFailureListener{
+//                Timber.e("firebase Error getting data $it")
+//            }
+                database.child("parkings").child(parkingid).get()
+                    .addOnSuccessListener {
                 parking.value = it.getValue(ParkingModel::class.java)
                 Timber.i("firebase Got value ${it.value}")
             }.addOnFailureListener{
                 Timber.e("firebase Error getting data $it")
             }
+
     }
 
     override fun create(firebaseUser: MutableLiveData<FirebaseUser>, parking: ParkingModel, context: Context) {
@@ -89,31 +122,33 @@ object FirebaseDBManager: ParkingStore {
         }
         Timber.i("IMAGE STRING CREATE : ${parking.image}")
         parking.uid = key
-        val parkingValues = parking.toMap()
-        val childAdd = HashMap<String, Any>()
-        childAdd["/parkings/$key"] = parkingValues
-        childAdd["/user-parkings/$uid/$key"] = parkingValues
-        database.updateChildren(childAdd)
+        //val parkingValues = parking.toMap()
+        //val childAdd = HashMap<String, Any>()
+        database.child("parkings").child(key).setValue(parking)
+        //childAdd["/parkings/$key"] = parkingValues
+        //childAdd["/user-parkings/$uid/$key"] = parkingValues
+        //database.updateChildren(childAdd)
         updateImage(parking.image, uid, key, context)
+    }
+    fun addReview(parkingid: String?, review: Review){
+
+        Timber.i("Add review $review")
+        if (parkingid != null) {
+            database.child("parkings").child(parkingid).child("reviews").push().setValue(review)
+        }
     }
 
     override fun delete(userid: String, parkingid: String) {
 
         val childDelete : MutableMap<String, Any?> = HashMap()
         childDelete["/parkings/$parkingid"] = null
-        childDelete["/user-parkings/$userid/$parkingid"] = null
+        //childDelete["/user-parkings/$userid/$parkingid"] = null
 
         database.updateChildren(childDelete)
     }
 
     override fun update(userid: String, parkingid: String, parking: ParkingModel, context: Context, imageChanged: Boolean) {
-
-        val parkingValues = parking.toMap()
-        val childUpdate : MutableMap<String, Any?> = HashMap()
-        childUpdate["parkings/$parkingid"] = parkingValues
-        childUpdate["user-parkings/$userid/$parkingid"] = parkingValues
-
-        database.updateChildren(childUpdate)
+        database.child("parkings").child(parkingid).setValue(parking)
         if(imageChanged){
             updateImage(parking.image, userid, parkingid, context)
         }
@@ -137,8 +172,8 @@ object FirebaseDBManager: ParkingStore {
                     var imageURL = it.toString()
                     Timber.i("IMAGE URL UPDATEIMAGE : $imageURL")
                     database.child("parkings").child(key).child("image").setValue(imageURL)
-                    database.child("user-parkings").child(uid).child(key).child("image").setValue(imageURL)
-                //updateImageRef(uid, key,imageURL)
+                    //database.child("user-parkings").child(uid).child(key).child("image").setValue(imageURL)
+
                 }
             }.addOnFailureListener{
                 var errorMessage = it.message
@@ -149,25 +184,4 @@ object FirebaseDBManager: ParkingStore {
 
     }
 
-    fun updateImageRef(userid: String,imageUri: String) {
-
-        val userParkings = database.child("user-parkings").child(userid)
-        val allParkings = database.child("parkings")
-
-        userParkings.addListenerForSingleValueEvent(
-            object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {}
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.children.forEach {
-                        Timber.i("DataChange")
-                        //Update Users imageUri
-                        it.ref.child("image").setValue(imageUri)
-                        //Update all donations that match 'it'
-                        val parking = it.getValue(ParkingModel::class.java)
-                        Timber.i("DataChange $parking" )
-                        allParkings.child(parking!!.uid!!).child("image").setValue(imageUri)
-                    }
-                }
-            })
-    }
 }

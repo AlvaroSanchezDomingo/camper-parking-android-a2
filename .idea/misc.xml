@@ -21,13 +21,16 @@
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/activity_maps.xml" value="0.25" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/activity_splash_screen.xml" value="0.10380622837370242" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/app_bar_home.xml" value="0.28177083333333336" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/card_parking.xml" value="0.11388888888888889" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/card_review.xml" value="0.2949438202247191" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/content_home.xml" value="0.28177083333333336" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/content_location_edit.xml" value="0.1" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_edit.xml" value="0.2" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_edit_old.xml" value="0.26979166666666665" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_list.xml" value="0.2248995983935743" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_location_edit.xml" value="0.26145833333333335" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_map.xml" value="0.209375" />
-        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_view.xml" value="0.17" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_view.xml" value="0.25" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/login.xml" value="0.19635416666666666" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/nav_header.xml" value="0.209375" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/switch_item.xml" value="0.209375" />

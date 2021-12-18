@@ -88,7 +88,7 @@ class MapFragment : Fragment() , OnMapReadyCallback {
         toggleDonations.setOnCheckedChangeListener { buttonView, isChecked ->
             Timber.i("isChecked == $isChecked")
             if (isChecked) mapViewModel.loadAll()
-            else mapViewModel.load(loggedInViewModel.liveFirebaseUser.value?.uid!!)
+            else mapViewModel.load(loggedInViewModel.liveFirebaseUser.value?.email!!)
         }
 
         super.onCreateOptionsMenu(menu, inflater)
@@ -106,7 +106,7 @@ class MapFragment : Fragment() , OnMapReadyCallback {
 
     override fun onResume() {
         super.onResume()
-        mapViewModel.load(loggedInViewModel.liveFirebaseUser.value?.uid!!)
+        mapViewModel.load(loggedInViewModel.liveFirebaseUser.value?.email!!)
     }
 
 }

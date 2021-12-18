@@ -78,7 +78,7 @@ class EditLocationActivity : AppCompatActivity() , OnMapReadyCallback, GoogleMap
     override fun onMapReady(googleMap: GoogleMap) {
         Timber.i("MAP READY")
         map = googleMap
-        editLocationViewModel.initMap(googleMap, this)
+        editLocationViewModel.initMap(googleMap)
         map.setOnMarkerDragListener(this)
         map.setOnMarkerClickListener(this)
     }
