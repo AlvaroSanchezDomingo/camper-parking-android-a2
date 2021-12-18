@@ -94,7 +94,7 @@ class ListFragment : Fragment(), ParkingClickListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_list, menu)
 
-        val item = menu.findItem(R.id.toggleDonations) as MenuItem
+        val item = menu.findItem(R.id.toggleUserParkings) as MenuItem
         item.setActionView(R.layout.togglebutton_layout)
         val toggleDonations: SwitchCompat = item.actionView.findViewById(R.id.toggleButton)
         toggleDonations.isChecked = false

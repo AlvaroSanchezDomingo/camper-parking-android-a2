@@ -2,6 +2,7 @@ package ie.wit.parking.ui.map
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -77,7 +78,19 @@ class MapFragment : Fragment() , OnMapReadyCallback {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_view, menu)
+        inflater.inflate(R.menu.menu_map, menu)
+
+        val item = menu.findItem(R.id.toggleUserParkings) as MenuItem
+        item.setActionView(R.layout.togglebutton_layout)
+        val toggleDonations: SwitchCompat = item.actionView.findViewById(R.id.toggleButton)
+        toggleDonations.isChecked = false
+
+        toggleDonations.setOnCheckedChangeListener { buttonView, isChecked ->
+            Timber.i("isChecked == $isChecked")
+            if (isChecked) mapViewModel.loadAll()
+            else mapViewModel.load(loggedInViewModel.liveFirebaseUser.value?.uid!!)
+        }
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -93,7 +106,7 @@ class MapFragment : Fragment() , OnMapReadyCallback {
 
     override fun onResume() {
         super.onResume()
-        mapViewModel.getUserParkings(loggedInViewModel.liveFirebaseUser.value?.uid!!)
+        mapViewModel.load(loggedInViewModel.liveFirebaseUser.value?.uid!!)
     }
 
 }
