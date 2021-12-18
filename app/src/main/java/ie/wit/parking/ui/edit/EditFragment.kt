@@ -28,8 +28,12 @@ import ie.wit.parking.databinding.FragmentEditBinding
 import ie.wit.parking.helpers.checkLocationPermissions
 import ie.wit.parking.helpers.createDefaultLocationRequest
 import ie.wit.parking.models.Location
+import ie.wit.parking.models.ParkingModel
 import ie.wit.parking.ui.auth.LoggedInViewModel
 import ie.wit.parking.ui.editlocation.EditLocationActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
@@ -50,15 +54,13 @@ class EditFragment : Fragment() , OnMapReadyCallback {
     var mapReady : Boolean = false
     var locationReady : Boolean = false
     var locationEdited : Boolean = false
+    var imageChanged : Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         locationService = LocationServices.getFusedLocationProviderClient(requireContext())
-
-
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -75,13 +77,14 @@ class EditFragment : Fragment() , OnMapReadyCallback {
         editViewModel = ViewModelProvider(this).get(EditViewModel::class.java)
 
         editViewModel.observableParking.observe(viewLifecycleOwner, {
-            renderParking()
+            renderParking(it)
         })
+
         editViewModel.observableStatus.observe(viewLifecycleOwner, {
                 status -> status?.let { render(status) }
         })
 
-        edit = arguments?.isEmpty == false
+        edit = args.parkingid != null && args.parkingid != "null"
         if(edit){
             Timber.i("EDIT ${args.parkingid}")
             editViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid)
@@ -127,12 +130,16 @@ class EditFragment : Fragment() , OnMapReadyCallback {
         }
     }
 
-    private fun renderParking() {
+    private fun renderParking(parking:ParkingModel) {
         fragBinding.parkingvm = editViewModel
+
         if(edit){
             Timber.i("ON LOCATION READY")
             locationReady = true
             locationUpdate()
+            if(parking.image != ""){
+                editViewModel.loadImage(parking.image, fragBinding.parkingImage)
+            }
         }
 
     }
@@ -153,9 +160,9 @@ class EditFragment : Fragment() , OnMapReadyCallback {
             R.id.save -> {
                 if(edit){
                     Timber.i("EDIT PARKING ${fragBinding.parkingvm?.observableParking!!.value!!}")
-                    editViewModel.editParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid!!,fragBinding.parkingvm?.observableParking!!.value!!)
+                    editViewModel.editParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid!!,fragBinding.parkingvm?.observableParking!!.value!!, requireContext(), imageChanged)
                 }else{
-                    editViewModel.addParking(loggedInViewModel.liveFirebaseUser)
+                    editViewModel.addParking(loggedInViewModel.liveFirebaseUser, requireContext())
                 }
                 true
             }
@@ -247,12 +254,13 @@ class EditFragment : Fragment() , OnMapReadyCallback {
                 when(result.resultCode){
                     AppCompatActivity.RESULT_OK -> {
                         if (result.data != null) {
-                            Timber.i("Got Image Result ${result.data!!.data}")
-                            //editViewModel.setImage(result.data!!.data!!)
+                            Timber.i("Got Image Result ${result.data!!.data.toString()}")
+                            editViewModel.setImage(result.data!!.data.toString())
+                            imageChanged = true
                             Picasso.get()
-                                .load(result.data!!.data!!)
+                                .load(result.data!!.data!!.toString())
+                                .resize(200, 200)
                                 .into(fragBinding.parkingImage)
-
                         }
                     }
                     AppCompatActivity.RESULT_CANCELED -> { } else -> { }

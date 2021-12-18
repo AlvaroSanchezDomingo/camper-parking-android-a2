@@ -3,6 +3,7 @@ package ie.wit.parking.ui.list
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -56,6 +57,7 @@ class ListFragment : Fragment(), ParkingClickListener {
             }
         })
 
+
         setSwipeRefresh()
 
         val swipeDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
@@ -91,12 +93,31 @@ class ListFragment : Fragment(), ParkingClickListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_list, menu)
+
+        val item = menu.findItem(R.id.toggleUserParkings) as MenuItem
+        item.setActionView(R.layout.togglebutton_layout)
+        val toggleDonations: SwitchCompat = item.actionView.findViewById(R.id.toggleButton)
+        toggleDonations.isChecked = false
+
+        toggleDonations.setOnCheckedChangeListener { buttonView, isChecked ->
+            Timber.i("isChecked == $isChecked")
+            if (isChecked) listViewModel.loadAll()
+            else listViewModel.load()
+        }
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(item,
-            requireView().findNavController()) || super.onOptionsItemSelected(item)
+
+        return when (item.itemId) {
+            R.id.editFragment -> {
+                NavigationUI.onNavDestinationSelected(item,
+                    requireView().findNavController()) || super.onOptionsItemSelected(item)
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
     }
 
     private fun render(donationsList: ArrayList<ParkingModel>) {

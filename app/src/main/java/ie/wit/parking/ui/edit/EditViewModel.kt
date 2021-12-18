@@ -1,18 +1,19 @@
 package ie.wit.parking.ui.edit
 
 
+import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseUser
+import com.squareup.picasso.Picasso
 import ie.wit.parking.firebase.FirebaseDBManager
 import ie.wit.parking.helpers.showImagePicker
 import ie.wit.parking.models.Location
@@ -38,19 +39,19 @@ class EditViewModel : ViewModel() {
         _parking.value!!.category = category
     }
 
-    fun addParking(firebaseUser: MutableLiveData<FirebaseUser>) {
+    fun addParking(firebaseUser: MutableLiveData<FirebaseUser>, context: Context) {
         _status.value = try {
             var parking = ParkingModel(title = _parking.value!!.title, description = _parking.value!!.description, category = _parking.value!!.category,
-                email = firebaseUser.value?.email!!, lat = _parking.value!!.lat, lng = _parking.value!!.lng, zoom=15f)
-            FirebaseDBManager.create(firebaseUser,parking)
+                image = _parking.value!!.image, email = firebaseUser.value?.email!!, lat = _parking.value!!.lat, lng = _parking.value!!.lng, zoom=15f)
+            FirebaseDBManager.create(firebaseUser,parking, context)
             true
         } catch (e: IllegalArgumentException) {
             false
         }
     }
-    fun editParking(userid: String, parkingid: String, parking: ParkingModel) {
+    fun editParking(userid: String, parkingid: String, parking: ParkingModel, context: Context, imageChanged:Boolean) {
         _status.value = try {
-            FirebaseDBManager.update(userid,parkingid, parking)
+            FirebaseDBManager.update(userid,parkingid, parking, context, imageChanged)
             true
         } catch (e: IllegalArgumentException) {
             false
@@ -58,7 +59,6 @@ class EditViewModel : ViewModel() {
     }
     fun getParking(userid:String, id: String?) {
         try {
-
             FirebaseDBManager.findById(userid, id!!, _parking)
             Timber.i("Detail getParking() Success : ${
                 _parking.value.toString()}")
@@ -66,6 +66,13 @@ class EditViewModel : ViewModel() {
         catch (e: Exception) {
             Timber.i("Detail getDonation() Error : ${e.message}")
         }
+    }
+
+    fun loadImage(image: String, imageView:ImageView){
+        Picasso.get()
+            .load(image)
+            .resize(200, 200)
+            .into(imageView)
     }
 
     fun doConfigureMap(m: GoogleMap) {
@@ -84,7 +91,7 @@ class EditViewModel : ViewModel() {
         showImagePicker(intentLauncher)
     }
 
-    fun setImage(image: Uri){
+    fun setImage(image: String){
         _parking.value!!.image = image
         Timber.i("Parking after saving image: ${_parking.value}")
     }

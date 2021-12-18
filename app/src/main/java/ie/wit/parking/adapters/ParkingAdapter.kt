@@ -3,6 +3,7 @@ package ie.wit.parking.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import ie.wit.parking.R
 import ie.wit.parking.databinding.CardParkingBinding
 import ie.wit.parking.models.ParkingModel
@@ -40,7 +41,12 @@ class ParkingAdapter constructor(private var parkings: ArrayList<ParkingModel>,
         fun bind(parking: ParkingModel, listener: ParkingClickListener) {
             binding.root.tag = parking
             binding.parking = parking
-            binding.imageIcon.setImageResource(R.mipmap.ic_launcher_round)
+            if (parking.image != ""){
+                Picasso.get()
+                    .load(parking.image)
+                    .resize(200, 200)
+                    .into(binding.imageIcon)
+            }
             binding.root.setOnClickListener { listener.onParkingClick(parking) }
             binding.executePendingBindings()
         }

@@ -19,15 +19,23 @@
         <entry key="..\:/mobile-app/assignment2/campe-parking-a2/app/src/main/res/menu/nav_drawer_menu.xml" value="0.20520833333333333" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2-develop/app/src/main/res/layout/fragment_edit.xml" value="0.1" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/activity_maps.xml" value="0.25" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/activity_splash_screen.xml" value="0.10380622837370242" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/app_bar_home.xml" value="0.28177083333333336" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/content_home.xml" value="0.28177083333333336" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/content_location_edit.xml" value="0.1" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_edit.xml" value="0.2" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_edit_old.xml" value="0.26979166666666665" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_location_edit.xml" value="0.26145833333333335" />
-        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_view.xml" value="0.36666666666666664" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_map.xml" value="0.209375" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_view.xml" value="0.17" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/login.xml" value="0.19635416666666666" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/nav_header.xml" value="0.209375" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/switch_item.xml" value="0.209375" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/menu/menu_edit.xml" value="0.28177083333333336" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/menu/menu_list.xml" value="0.209375" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/menu/menu_map.xml" value="0.23072916666666668" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/menu/menu_view.xml" value="0.36666666666666664" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/menu/nav_drawer_menu.xml" value="0.209375" />
         <entry key="..\:/mobile-app/week10/DonationX/app/src/main/res/layout/fragment_donation_detail.xml" value="0.1" />
         <entry key="..\:/mobile-app/week10/DonationX/app/src/main/res/layout/home.xml" value="0.1" />
         <entry key="..\:/mobile-app/week10/DonationX/app/src/main/res/layout/nav_header.xml" value="0.1" />

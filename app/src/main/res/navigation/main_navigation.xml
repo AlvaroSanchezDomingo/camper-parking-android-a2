@@ -18,7 +18,8 @@
         <argument
             android:name="parkingid"
             app:argType="string"
-            app:nullable="true" />
+            app:nullable="true"
+            android:defaultValue="null" />
     </fragment>
     <fragment
         android:id="@+id/listFragment"
@@ -33,6 +34,9 @@
         <action
             android:id="@+id/action_listFragment_to_viewFragment"
             app:destination="@id/viewFragment" />
+        <action
+            android:id="@+id/action_listFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <fragment
         android:id="@+id/viewFragment"
@@ -44,6 +48,14 @@
             app:nullable="true" />
         <action
             android:id="@+id/action_viewFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="ie.wit.parking.ui.map.MapFragment"
+        android:label="@string/action_map">
+        <action
+            android:id="@+id/action_mapFragment_to_listFragment"
             app:destination="@id/listFragment" />
     </fragment>
 </navigation>

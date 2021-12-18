@@ -31,6 +31,15 @@ class ListViewModel : ViewModel() {
             Timber.i("List Load Error : $e.message")
         }
     }
+    fun loadAll() {
+        try {
+            FirebaseDBManager.findAll(parkingList)
+            Timber.i("List Load All Success : ${parkingList.value.toString()}")
+        }
+        catch (e: Exception) {
+            Timber.i("List Load All Error : $e.message")
+        }
+    }
 
     fun delete(userid: String, id: String) {
         try {

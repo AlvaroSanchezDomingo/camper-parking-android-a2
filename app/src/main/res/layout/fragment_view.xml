@@ -10,7 +10,7 @@
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/editFragment"
+    android:id="@+id/viewFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.edit.EditFragment">
@@ -51,13 +51,25 @@
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
-        android:layout_width="405dp"
-        android:layout_height="244dp"
-        android:layout_marginTop="41dp"
+        android:layout_width="326dp"
+        android:layout_height="203dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="349dp"
+        android:layout_height="316dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
