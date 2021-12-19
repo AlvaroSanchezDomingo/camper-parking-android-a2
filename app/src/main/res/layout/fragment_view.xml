@@ -24,23 +24,22 @@
                 android:layout_width="262dp"
                 android:layout_height="29dp"
                 android:layout_margin="8dp"
-                android:layout_marginStart="52dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:inputType="text"
                 android:maxLength="25"
                 android:maxLines="1"
                 android:padding="8dp"
                 android:text="@={viewvm.observableParking.title}"
-                android:textSize="30sp"
-                app:layout_constraintEnd_toStartOf="@+id/ratingBar2"
-                app:layout_constraintHorizontal_bias="1.0"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toStartOf="@+id/ratingBarAverage"
+                app:layout_constraintHorizontal_bias="0.344"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/description"
-                android:layout_width="394dp"
+                android:layout_width="307dp"
                 android:layout_height="42dp"
                 android:layout_margin="8dp"
                 android:layout_marginTop="10dp"
@@ -54,6 +53,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title" />
 
+            <ImageView
+                android:id="@+id/categoryIcon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ratingBarAverage"
+                app:srcCompat="@drawable/camper_2" />
 
             <com.google.android.gms.maps.MapView
                 android:id="@+id/mapView"
@@ -82,12 +90,11 @@
                 android:layout_margin="8dp"
                 android:layout_marginTop="20dp"
                 android:inputType="text"
-                android:maxLength="25"
-                android:maxLines="1"
+                android:maxLength="100"
+                android:maxLines="2"
                 android:padding="8dp"
                 android:text=""
-
-                android:textSize="30sp"
+                android:textSize="10sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mapView"

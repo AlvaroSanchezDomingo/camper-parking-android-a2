@@ -64,7 +64,7 @@ class ViewFragment : Fragment() , OnMapReadyCallback {
             val comment = fragBinding.comment.text.toString()
             fragBinding.comment.setText("")
             viewViewModel.addReview(loggedInViewModel.liveFirebaseUser.value!!.email!!, comment, rating)
-            viewViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid)
+            viewViewModel.getParking(args.parkingid)
         }
         return root;
     }
@@ -99,6 +99,7 @@ class ViewFragment : Fragment() , OnMapReadyCallback {
         Timber.i("PARKING REVIEWS ${parking.reviews}")
         fragBinding.recyclerView.adapter = ReviewAdapter(ArrayList(parking.reviews.values))
         viewViewModel.calculateRating()
+        viewViewModel.loadCategoryImage(fragBinding.categoryIcon)
     }
     private fun renderRating(rating: Float) {
         fragBinding.viewvm = viewViewModel
@@ -123,7 +124,7 @@ class ViewFragment : Fragment() , OnMapReadyCallback {
 
     override fun onResume() {
         super.onResume()
-        viewViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid)
+        viewViewModel.getParking( args.parkingid)
     }
 
 }

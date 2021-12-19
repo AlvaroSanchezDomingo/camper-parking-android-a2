@@ -7,6 +7,7 @@ import com.squareup.picasso.Picasso
 import ie.wit.parking.R
 import ie.wit.parking.databinding.CardParkingBinding
 import ie.wit.parking.models.ParkingModel
+import timber.log.Timber
 
 interface ParkingClickListener {
     fun onParkingClick(parking: ParkingModel)
@@ -34,6 +35,19 @@ class ParkingAdapter constructor(private var parkings: ArrayList<ParkingModel>,
     }
 
     override fun getItemCount(): Int = parkings.size
+    fun calculateRating(parking: ParkingModel): Float{
+        var average = 0f
+        var count = 0f
+        var sum = 0f
+        for ((key, value) in parking.reviews) {
+            Timber.i("Calculating rating review : $value")
+            count +=1
+            Timber.i("$key = $value")
+            sum += value.rating!!
+        }
+        average = sum/count
+        return average
+    }
 
     inner class MainHolder(val binding : CardParkingBinding) :
                             RecyclerView.ViewHolder(binding.root) {
@@ -47,6 +61,17 @@ class ParkingAdapter constructor(private var parkings: ArrayList<ParkingModel>,
                     .resize(200, 200)
                     .into(binding.imageIcon)
             }
+            binding.rating = calculateRating(parking)
+            when (parking.category) {
+                1 -> binding.categoryIcon.setImageResource(R.drawable.nature_parking)
+                2 -> binding.categoryIcon.setImageResource(R.drawable.public_parking)
+                3 -> binding.categoryIcon.setImageResource(R.drawable.private_parking)
+                4 -> binding.categoryIcon.setImageResource(R.drawable.camping_parking)
+                else -> {
+                    binding.categoryIcon.setImageResource(R.drawable.camper)
+                }
+            }
+
             binding.root.setOnClickListener { listener.onParkingClick(parking) }
             binding.executePendingBindings()
         }

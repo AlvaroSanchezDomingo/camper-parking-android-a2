@@ -15,12 +15,84 @@
     android:layout_height="match_parent"
     tools:context=".ui.edit.EditFragment">
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:id="@+id/cardDonation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/imageIcon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@mipmap/ic_launcher_round" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="238dp"
+                android:layout_height="35dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="85dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="72dp"
+                android:gravity="center"
+                android:text="@{mapvm.observableParking.title}" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="150dp"
+                android:layout_height="20dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="60dp"
+                android:layout_marginEnd="100dp"
+                android:gravity="center"
+                android:text="@{mapvm.observableParking.email}"
+                android:textSize="11sp" />
+
+            <RatingBar
+                android:id="@+id/ratingBarAverage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="150dp"
+                android:isIndicator="true"
+                android:rating="@{mapvm.observableRating}"
+                android:theme="@style/RatingBar" />
+
+            <ImageView
+                android:id="@+id/categoryIcon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="0dp"
+                app:srcCompat="@drawable/camper_2" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="386dp"
         android:layout_height="531dp"
-        android:layout_marginTop="116dp"
+        android:layout_marginTop="120dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.64"
         app:layout_constraintStart_toStartOf="parent"

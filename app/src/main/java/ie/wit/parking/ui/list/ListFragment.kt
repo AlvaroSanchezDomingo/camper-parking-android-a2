@@ -77,7 +77,7 @@ class ListFragment : Fragment(), ParkingClickListener {
 
         val swipeEditHandler = object : SwipeToEditCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                //onParkingClick(viewHolder.itemView.tag as ParkingModel)
+
                 var parking = viewHolder.itemView.tag as ParkingModel
                 Timber.i("parking.uid == ${parking.uid}")
                 val action = ListFragmentDirections.actionListFragmentToEditFragment(parking.uid!!)

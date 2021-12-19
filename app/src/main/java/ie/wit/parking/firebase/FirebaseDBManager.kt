@@ -45,25 +45,6 @@ object FirebaseDBManager: ParkingStore {
 
     override fun findAll(email: String, parkingsList: MutableLiveData<List<ParkingModel>>) {
 
-//        database.child("user-parkings").child(userid)
-//            .addValueEventListener(object : ValueEventListener {
-//                override fun onCancelled(error: DatabaseError) {
-//                    Timber.i("Firebase Parking error : ${error.message}")
-//                }
-//
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    val localList = ArrayList<ParkingModel>()
-//                    val children = snapshot.children
-//                    children.forEach {
-//                        val parking = it.getValue(ParkingModel::class.java)
-//                        localList.add(parking!!)
-//                    }
-//                    database.child("user-parkings").child(userid)
-//                        .removeEventListener(this)
-//
-//                    parkingsList.value = localList
-//                }
-//            })
             Timber.i("Find all by user : $email")
                 database.child("parkings")
             .addValueEventListener(object : ValueEventListener {
@@ -72,14 +53,11 @@ object FirebaseDBManager: ParkingStore {
                     Timber.i("Firebase Parking error : ${error.message}")
                 }
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    Timber.i("STEP 1")
                     val localList = ArrayList<ParkingModel>()
                     val children = snapshot.children
                     children.forEach {
-                        Timber.i("STEP 2 ${it.value}")
                         val parking = it.getValue(ParkingModel::class.java)
                         if(parking!!.email == email){
-                            Timber.i("STEP 3")
                             localList.add(parking)
                         }
                     }
@@ -92,15 +70,8 @@ object FirebaseDBManager: ParkingStore {
 
     }
 
-    override fun findById(userid: String, parkingid: String, parking: MutableLiveData<ParkingModel>) {
+    override fun findById(parkingid: String, parking: MutableLiveData<ParkingModel>) {
 
-//        database.child("user-parkings").child(userid)
-//            .child(parkingid).get().addOnSuccessListener {
-//                parking.value = it.getValue(ParkingModel::class.java)
-//                Timber.i("firebase Got value ${it.value}")
-//            }.addOnFailureListener{
-//                Timber.e("firebase Error getting data $it")
-//            }
                 database.child("parkings").child(parkingid).get()
                     .addOnSuccessListener {
                 parking.value = it.getValue(ParkingModel::class.java)

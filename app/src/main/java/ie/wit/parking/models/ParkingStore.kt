@@ -10,7 +10,7 @@ interface ParkingStore {
     fun findAll(userid:String,
                 parkingsList:
                 MutableLiveData<List<ParkingModel>>)
-    fun findById(userid:String, parkingid: String,
+    fun findById(parkingid: String,
                  parking: MutableLiveData<ParkingModel>)
     fun create(firebaseUser: MutableLiveData<FirebaseUser>, parking: ParkingModel, context: Context)
     fun delete(userid:String,parkingid: String)

@@ -18,10 +18,19 @@
         <entry key="..\:/mobile-app/assignment2/campe-parking-a2/app/src/main/res/menu/menu_report.xml" value="0.20520833333333333" />
         <entry key="..\:/mobile-app/assignment2/campe-parking-a2/app/src/main/res/menu/nav_drawer_menu.xml" value="0.20520833333333333" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2-develop/app/src/main/res/layout/fragment_edit.xml" value="0.1" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1859375" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/drawable/camping_parking.xml" value="0.1859375" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1859375" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/drawable/ic_menu_report.xml" value="0.31302083333333336" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/drawable/ic_swipe_delete.xml" value="0.1859375" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/drawable/ic_swipe_edit.xml" value="0.1859375" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/drawable/nature_parking.xml" value="0.1859375" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/drawable/private_parking.xml" value="0.1859375" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/drawable/public_parking.xml" value="0.1859375" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/activity_maps.xml" value="0.25" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/activity_splash_screen.xml" value="0.10380622837370242" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/app_bar_home.xml" value="0.28177083333333336" />
-        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/card_parking.xml" value="0.11388888888888889" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/card_parking.xml" value="0.1" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/card_review.xml" value="0.2949438202247191" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/content_home.xml" value="0.28177083333333336" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/content_location_edit.xml" value="0.1" />
@@ -32,7 +41,7 @@
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_map.xml" value="0.209375" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/fragment_view.xml" value="0.25" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/login.xml" value="0.19635416666666666" />
-        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/nav_header.xml" value="0.209375" />
+        <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/nav_header.xml" value="0.1" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/layout/switch_item.xml" value="0.209375" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/menu/menu_edit.xml" value="0.28177083333333336" />
         <entry key="..\:/mobile-app/assignment2/camper-parking-android-a2/app/src/main/res/menu/menu_list.xml" value="0.209375" />

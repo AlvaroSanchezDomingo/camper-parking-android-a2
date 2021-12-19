@@ -10,6 +10,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.squareup.picasso.Picasso
+import ie.wit.parking.R
 import ie.wit.parking.firebase.FirebaseDBManager
 import ie.wit.parking.models.ParkingModel
 import ie.wit.parking.models.Review
@@ -53,10 +54,10 @@ class ViewViewModel : ViewModel() {
         }
     }
 
-    fun getParking(userid:String, id: String?) {
+    fun getParking( id: String?) {
         try {
 
-            FirebaseDBManager.findById(userid, id!!, _parking)
+            FirebaseDBManager.findById( id!!, _parking)
             Timber.i("Detail getParking() Success : ${
                 _parking.value.toString()}")
         }
@@ -77,6 +78,20 @@ class ViewViewModel : ViewModel() {
         _rating.value = sum/count
         Timber.i("Calculating rating rating : ${_rating.value}")
     }
+
+    fun loadCategoryImage(imageView: ImageView){
+        when (_parking.value!!.category) {
+            1 -> imageView.setImageResource(R.drawable.nature_parking)
+            2 -> imageView.setImageResource(R.drawable.public_parking)
+            3 -> imageView.setImageResource(R.drawable.private_parking)
+            4 -> imageView.setImageResource(R.drawable.camping_parking)
+            else -> {
+                imageView.setImageResource(R.drawable.camper)
+            }
+        }
+    }
+
+
     fun loadImage(image: String, imageView: ImageView){
         Picasso.get()
             .load(image)

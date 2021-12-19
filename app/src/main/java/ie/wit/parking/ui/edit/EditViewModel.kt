@@ -60,7 +60,7 @@ class EditViewModel : ViewModel() {
     }
     fun getParking(userid:String, id: String?) {
         try {
-            FirebaseDBManager.findById(userid, id!!, _parking)
+            FirebaseDBManager.findById(id!!, _parking)
             Timber.i("Detail getParking() Success : ${
                 _parking.value.toString()}")
         }
