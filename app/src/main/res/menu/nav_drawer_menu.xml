@@ -5,15 +5,15 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/editFragment"
-            android:icon="@drawable/ic_swipe_delete"
+            android:icon="@drawable/add_menu"
             android:title="@string/action_edit" />
         <item
             android:id="@+id/listFragment"
-            android:icon="@drawable/ic_swipe_delete"
+            android:icon="@drawable/list_menu"
             android:title="@string/action_list" />
         <item
             android:id="@+id/mapFragment"
-            android:icon="@drawable/ic_swipe_delete"
+            android:icon="@drawable/map_menu"
             android:title="@string/action_map" />
     </group>
     <item android:title="Access Control">

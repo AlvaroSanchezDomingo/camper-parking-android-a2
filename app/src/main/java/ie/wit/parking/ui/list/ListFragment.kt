@@ -29,7 +29,7 @@ class ListFragment : Fragment(), ParkingClickListener {
     lateinit var loader : AlertDialog
     private val listViewModel: ListViewModel by activityViewModels()
     private val loggedInViewModel : LoggedInViewModel by activityViewModels()
-
+    private var userParkings: Boolean = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -62,12 +62,20 @@ class ListFragment : Fragment(), ParkingClickListener {
 
         val swipeDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                showLoader(loader,"Deleting Parking")
-                val adapter = fragBinding.recyclerView.adapter as ParkingAdapter
-                adapter.removeAt(viewHolder.adapterPosition)
-                listViewModel.delete(listViewModel.liveFirebaseUser.value?.uid!!,
-                    (viewHolder.itemView.tag as ParkingModel).uid!!)
-                hideLoader(loader)
+                val parking = viewHolder.itemView.tag as ParkingModel
+                if(listViewModel.liveFirebaseUser.value?.email == parking.email){
+                    showLoader(loader,"Deleting Parking")
+                    val adapter = fragBinding.recyclerView.adapter as ParkingAdapter
+                    adapter.removeAt(viewHolder.adapterPosition)
+                    listViewModel.delete(listViewModel.liveFirebaseUser.value?.uid!!, parking.uid!!)
+                    hideLoader(loader)
+                }else{
+                    if(userParkings){
+                        listViewModel.load()
+                    }else{
+                        listViewModel.loadAll()
+                    }
+                }
             }
         }
 
@@ -77,11 +85,19 @@ class ListFragment : Fragment(), ParkingClickListener {
 
         val swipeEditHandler = object : SwipeToEditCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-
-                var parking = viewHolder.itemView.tag as ParkingModel
-                Timber.i("parking.uid == ${parking.uid}")
-                val action = ListFragmentDirections.actionListFragmentToEditFragment(parking.uid!!)
-                findNavController().navigate(action)
+                val parking = viewHolder.itemView.tag as ParkingModel
+                if(listViewModel.liveFirebaseUser.value?.email == parking.email) {
+                    Timber.i("parking.uid == ${parking.uid}")
+                    val action =
+                        ListFragmentDirections.actionListFragmentToEditFragment(parking.uid!!)
+                    findNavController().navigate(action)
+                }else{
+                    if(userParkings){
+                        listViewModel.load()
+                    }else{
+                        listViewModel.loadAll()
+                    }
+                }
             }
         }
         val itemTouchEditHelper = ItemTouchHelper(swipeEditHandler)
@@ -100,6 +116,7 @@ class ListFragment : Fragment(), ParkingClickListener {
         toggleDonations.isChecked = false
 
         toggleDonations.setOnCheckedChangeListener { buttonView, isChecked ->
+            userParkings = !isChecked
             Timber.i("isChecked == $isChecked")
             if (isChecked) listViewModel.loadAll()
             else listViewModel.load()
@@ -109,15 +126,9 @@ class ListFragment : Fragment(), ParkingClickListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        return when (item.itemId) {
-            R.id.editFragment -> {
                 NavigationUI.onNavDestinationSelected(item,
                     requireView().findNavController()) || super.onOptionsItemSelected(item)
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-
+        return true
     }
 
     private fun render(parkingList: ArrayList<ParkingModel>) {

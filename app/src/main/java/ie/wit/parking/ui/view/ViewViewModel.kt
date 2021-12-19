@@ -95,7 +95,6 @@ class ViewViewModel : ViewModel() {
     fun loadImage(image: String, imageView: ImageView){
         Picasso.get()
             .load(image)
-            .resize(200, 200)
             .into(imageView)
     }
 

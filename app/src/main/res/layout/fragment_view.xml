@@ -22,12 +22,10 @@
             <TextView
                 android:id="@+id/title"
                 android:layout_width="262dp"
-                android:layout_height="29dp"
+                android:layout_height="50dp"
                 android:layout_margin="8dp"
                 android:layout_marginTop="8dp"
                 android:inputType="text"
-                android:maxLength="25"
-                android:maxLines="1"
                 android:padding="8dp"
                 android:text="@={viewvm.observableParking.title}"
                 android:textSize="20sp"
@@ -40,7 +38,7 @@
             <TextView
                 android:id="@+id/description"
                 android:layout_width="307dp"
-                android:layout_height="42dp"
+                android:layout_height="50dp"
                 android:layout_margin="8dp"
                 android:layout_marginTop="10dp"
                 android:inputType="text"
@@ -65,9 +63,8 @@
 
             <com.google.android.gms.maps.MapView
                 android:id="@+id/mapView"
-                android:layout_width="326dp"
-                android:layout_height="203dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.494"
                 app:layout_constraintStart_toStartOf="parent"
@@ -75,39 +72,41 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="325dp"
+                android:layout_width="match_parent"
                 android:layout_height="212dp"
-                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/description"
                 app:srcCompat="@drawable/ic_launcher_foreground" />
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/comment"
-                android:layout_width="331dp"
-                android:layout_height="46dp"
-                android:layout_margin="8dp"
-                android:layout_marginTop="20dp"
-                android:inputType="text"
-                android:maxLength="100"
-                android:maxLines="2"
-                android:padding="8dp"
-                android:text=""
-                android:textSize="10sp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:hint="@string/comment"
+                app:boxBackgroundColor="@color/white"
+                app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mapView"
-                tools:ignore="TouchTargetSizeCheck" />
+                app:startIconContentDescription="title"
+                app:startIconDrawable="@drawable/private_parking">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/commentText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <RatingBar
                 android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="51dp"
+                android:numStars="5"
                 android:rating="0"
                 android:stepSize="0.5"
                 app:layout_constraintEnd_toStartOf="@+id/reviewButton"
-                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintHorizontal_bias="0.571"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/comment" />
 
@@ -127,8 +126,6 @@
                 android:id="@+id/reviewButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="40dp"
                 android:text="send"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/comment" />

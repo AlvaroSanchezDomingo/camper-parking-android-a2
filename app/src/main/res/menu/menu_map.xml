@@ -9,7 +9,12 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/editFragment"
-        android:orderInCategory="102"
+        android:orderInCategory="101"
         android:title="@string/action_edit"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/listFragment"
+        android:orderInCategory="102"
+        android:title="@string/action_list"
         app:showAsAction="never" />
 </menu>

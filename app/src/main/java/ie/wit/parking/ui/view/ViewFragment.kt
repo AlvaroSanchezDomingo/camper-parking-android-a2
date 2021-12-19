@@ -61,8 +61,8 @@ class ViewFragment : Fragment() , OnMapReadyCallback {
             val rating = fragBinding.ratingBar.rating
             fragBinding.ratingBar.rating = 0f
             Timber.i("rating $rating")
-            val comment = fragBinding.comment.text.toString()
-            fragBinding.comment.setText("")
+            val comment = fragBinding.commentText.text.toString()
+            fragBinding.commentText.setText("")
             viewViewModel.addReview(loggedInViewModel.liveFirebaseUser.value!!.email!!, comment, rating)
             viewViewModel.getParking(args.parkingid)
         }

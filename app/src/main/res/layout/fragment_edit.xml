@@ -8,115 +8,120 @@
             name="parkingvm"
             type="ie.wit.parking.ui.edit.EditViewModel" />
     </data>
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/editFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.edit.EditFragment">
-
-
-    <EditText
-        android:id="@+id/title"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_margin="8dp"
-        android:layout_marginTop="32dp"
-        android:inputType="text"
-        android:maxLength="25"
-        android:maxLines="1"
-        android:padding="8dp"
-        android:textSize="30sp"
-        android:text="@={parkingvm.observableParking.title}"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="TouchTargetSizeCheck" />
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/editFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.edit.EditFragment">
 
 
-    <EditText
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginTop="16dp"
-        android:inputType="text"
-        android:maxLength="100"
-        android:maxLines="2"
-        android:minHeight="48dp"
-        android:padding="8dp"
-        android:text="@={parkingvm.observableParking.description}"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@+id/title"
-        tools:layout_editor_absoluteX="8dp" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:hint="@string/title"
+                app:endIconMode="clear_text"
+                app:boxBackgroundColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:startIconContentDescription="title"
+                app:startIconDrawable="@drawable/private_parking">
 
-    <RadioGroup
-        android:id="@+id/Category"
-        android:layout_width="305dp"
-        android:layout_height="45dp"
-        android:layout_alignParentStart="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={parkingvm.observableParking.title}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:hint="@string/description"
+                app:boxBackgroundColor="@color/white"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title"
+                app:startIconDrawable="@drawable/private_parking">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={parkingvm.observableParking.description}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <RadioGroup
+                android:id="@+id/Category"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description">
 
 
-        <RadioButton
-            android:id="@+id/Nature"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="@{parkingvm.observableParking.category == 1}"
-            android:onClick="@{()->parkingvm.radioButtonCategory(1)}"
-            android:text="@string/Nature" />
+                <RadioButton
+                    android:id="@+id/Nature"
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:checked="@{parkingvm.observableParking.category == 1}"
+                    android:onClick="@{()->parkingvm.radioButtonCategory(1)}"
+                    android:text="@string/Nature" />
 
-        <RadioButton
-            android:id="@+id/Public"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="@{parkingvm.observableParking.category == 2}"
-            android:onClick="@{()->parkingvm.radioButtonCategory(2)}"
-            android:text="@string/Public" />
+                <RadioButton
+                    android:id="@+id/Public"
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:checked="@{parkingvm.observableParking.category == 2}"
+                    android:onClick="@{()->parkingvm.radioButtonCategory(2)}"
+                    android:text="@string/Public" />
 
-        <RadioButton
-            android:id="@+id/Private"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="@{parkingvm.observableParking.category == 3}"
-            android:onClick="@{()->parkingvm.radioButtonCategory(3)}"
-            android:text="@string/Private" />
+                <RadioButton
+                    android:id="@+id/Private"
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:checked="@{parkingvm.observableParking.category == 3}"
+                    android:onClick="@{()->parkingvm.radioButtonCategory(3)}"
+                    android:text="@string/Private" />
 
-        <RadioButton
-            android:id="@+id/Camping"
-            android:layout_width="97dp"
-            android:layout_height="wrap_content"
-            android:checked="@{parkingvm.observableParking.category == 4}"
-            android:onClick="@{()->parkingvm.radioButtonCategory(4)}"
-            android:text="@string/Camping" />
-    </RadioGroup>
+                <RadioButton
+                    android:id="@+id/Camping"
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:checked="@{parkingvm.observableParking.category == 4}"
+                    android:onClick="@{()->parkingvm.radioButtonCategory(4)}"
+                    android:text="@string/Camping" />
+            </RadioGroup>
 
-    <ImageView
-        android:id="@+id/parkingImage"
-        android:layout_width="262dp"
-        android:layout_height="269dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.535"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Category"
-        app:srcCompat="@mipmap/ic_launcher" />
+            <ImageView
+                android:id="@+id/parkingImage"
+                android:layout_width="match_parent"
+                android:layout_height="269dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.535"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Category"
+                app:srcCompat="@mipmap/ic_launcher" />
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="405dp"
-        android:layout_height="244dp"
-        android:layout_marginTop="28dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/parkingImage" />
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="405dp"
+                android:layout_height="244dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/parkingImage" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

@@ -72,10 +72,8 @@ class EditViewModel : ViewModel() {
     fun loadImage(image: String, imageView:ImageView){
         Picasso.get()
             .load(image)
-            .resize(200, 200)
             .into(imageView)
     }
-
     fun doConfigureMap(m: GoogleMap) {
         map = m
         map?.uiSettings?.isZoomControlsEnabled = true
