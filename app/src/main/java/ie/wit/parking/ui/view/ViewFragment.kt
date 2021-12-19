@@ -8,11 +8,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import ie.wit.parking.R
+import ie.wit.parking.adapters.ParkingAdapter
 import ie.wit.parking.databinding.FragmentViewBinding
 import ie.wit.parking.models.ParkingModel
+import ie.wit.parking.models.Review
 import ie.wit.parking.ui.auth.LoggedInViewModel
 import timber.log.Timber
 
@@ -43,13 +46,26 @@ class ViewFragment : Fragment() , OnMapReadyCallback {
         _fragBinding = FragmentViewBinding.inflate(inflater, container, false)
         val root = fragBinding.root
 
+        fragBinding.recyclerView.layoutManager = LinearLayoutManager(activity)
+
         viewViewModel = ViewModelProvider(this).get(ViewViewModel::class.java)
 
         viewViewModel.observableParking.observe(viewLifecycleOwner, {
             renderParking(it)
         })
+        viewViewModel.observableRating.observe(viewLifecycleOwner, {
+            renderRating(it)
+        })
 
-
+        fragBinding.reviewButton.setOnClickListener{
+            val rating = fragBinding.ratingBar.rating
+            fragBinding.ratingBar.rating = 0f
+            Timber.i("rating $rating")
+            val comment = fragBinding.commentText.text.toString()
+            fragBinding.commentText.setText("")
+            viewViewModel.addReview(loggedInViewModel.liveFirebaseUser.value!!.email!!, comment, rating)
+            viewViewModel.getParking(args.parkingid)
+        }
         return root;
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,6 +96,14 @@ class ViewFragment : Fragment() , OnMapReadyCallback {
         if(parking.image != ""){
             viewViewModel.loadImage(parking.image, fragBinding.imageView)
         }
+        Timber.i("PARKING REVIEWS ${parking.reviews}")
+        fragBinding.recyclerView.adapter = ReviewAdapter(ArrayList(parking.reviews.values))
+        viewViewModel.calculateRating()
+        viewViewModel.loadCategoryImage(fragBinding.categoryIcon)
+    }
+    private fun renderRating(rating: Float) {
+        fragBinding.viewvm = viewViewModel
+        Timber.i("Rating Changed $rating")
     }
 
 
@@ -100,7 +124,7 @@ class ViewFragment : Fragment() , OnMapReadyCallback {
 
     override fun onResume() {
         super.onResume()
-        viewViewModel.getParking(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.parkingid)
+        viewViewModel.getParking( args.parkingid)
     }
 
 }

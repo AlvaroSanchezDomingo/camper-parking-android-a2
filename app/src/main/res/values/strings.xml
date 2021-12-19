@@ -55,5 +55,8 @@
     <string name="menuLocation">Location</string>
     <string name="menuSave">Save</string>
     <string name="menuImage">Image</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="comment">Review</string>
 
 </resources>

@@ -23,7 +23,7 @@ class EditLocationViewModel : ViewModel() {
 
 
 
-    fun initMap(map: GoogleMap, activity: Activity) {
+    fun initMap(map: GoogleMap) {
         val loc = LatLng(_location.value!!.lat, _location.value!!.lng)
         map.uiSettings.isZoomControlsEnabled = true
         val options = MarkerOptions()

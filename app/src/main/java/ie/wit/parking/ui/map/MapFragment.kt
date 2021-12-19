@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.Marker
 import ie.wit.parking.R
 import ie.wit.parking.databinding.FragmentMapBinding
 import ie.wit.parking.ui.auth.LoggedInViewModel
@@ -46,6 +47,12 @@ class MapFragment : Fragment() , OnMapReadyCallback {
         mapViewModel.observableParkings.observe(viewLifecycleOwner, {
             renderParkings()
         })
+        mapViewModel.observableParking.observe(viewLifecycleOwner, {
+            renderParking()
+        })
+        mapViewModel.observableRating.observe(viewLifecycleOwner, {
+            renderRating()
+        })
 
 
         return root;
@@ -67,7 +74,7 @@ class MapFragment : Fragment() , OnMapReadyCallback {
     private fun locationUpdate(){
         if(mapReady && locationReady){
             Timber.i("MAP AND LOCATION READY $mapReady $locationReady")
-            mapViewModel.mapLocationUpdate()
+            mapViewModel.mapLocationUpdate(requireContext())
         }
     }
     private fun renderParkings() {
@@ -75,6 +82,15 @@ class MapFragment : Fragment() , OnMapReadyCallback {
         Timber.i("ON LOCATION READY")
         locationReady = true
         locationUpdate()
+    }
+    private fun renderParking() {
+        fragBinding.mapvm = mapViewModel
+        mapViewModel.loadCategoryImage(fragBinding.categoryIcon)
+        mapViewModel.loadImage(fragBinding.imageIcon)
+        mapViewModel.calculateRating()
+    }
+    private fun renderRating() {
+        fragBinding.mapvm = mapViewModel
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -88,7 +104,7 @@ class MapFragment : Fragment() , OnMapReadyCallback {
         toggleDonations.setOnCheckedChangeListener { buttonView, isChecked ->
             Timber.i("isChecked == $isChecked")
             if (isChecked) mapViewModel.loadAll()
-            else mapViewModel.load(loggedInViewModel.liveFirebaseUser.value?.uid!!)
+            else mapViewModel.load(loggedInViewModel.liveFirebaseUser.value?.email!!)
         }
 
         super.onCreateOptionsMenu(menu, inflater)
@@ -106,7 +122,15 @@ class MapFragment : Fragment() , OnMapReadyCallback {
 
     override fun onResume() {
         super.onResume()
-        mapViewModel.load(loggedInViewModel.liveFirebaseUser.value?.uid!!)
+        mapViewModel.load(loggedInViewModel.liveFirebaseUser.value?.email!!)
     }
+
+//    override fun onMarkerClick(marker: Marker):Boolean {
+//        Timber.i("onMarkerClick")
+//        mapViewModel.doMarkerSelected(marker)
+//        mapViewModel.loadCategoryImage(fragBinding.categoryIcon)
+//        mapViewModel.loadImage(fragBinding.imageIcon)
+//        return true
+//    }
 
 }

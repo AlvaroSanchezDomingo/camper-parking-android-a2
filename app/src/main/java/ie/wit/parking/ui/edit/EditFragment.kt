@@ -157,6 +157,10 @@ class EditFragment : Fragment() , OnMapReadyCallback {
                 NavigationUI.onNavDestinationSelected(item,
                     requireView().findNavController()) || super.onOptionsItemSelected(item)
             }
+            R.id.mapFragment -> {
+                NavigationUI.onNavDestinationSelected(item,
+                    requireView().findNavController()) || super.onOptionsItemSelected(item)
+            }
             R.id.save -> {
                 if(edit){
                     Timber.i("EDIT PARKING ${fragBinding.parkingvm?.observableParking!!.value!!}")
