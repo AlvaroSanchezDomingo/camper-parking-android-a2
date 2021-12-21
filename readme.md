@@ -29,7 +29,7 @@ Feature branches to develop new features. The develop branch splits into a new f
 
 ## UML diagram
 
- <img src="https://github.com/AlvaroSanchezDomingo/camper-parking-android-a2/blob/master/images/UML%20camper%20parking.png">
+ <img src="https://github.com/AlvaroSanchezDomingo/camper-parking-android-a2/blob/master/images/UML_camper_parking.png">
 
 
 
